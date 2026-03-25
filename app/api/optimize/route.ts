@@ -280,6 +280,27 @@ async function callGemini(payload: Required<OptimizePayload>, candidates: ModelS
   }
 }
 
+function fallbackRecommendations(candidates: ModelSpec[], reason: string) {
+  const top = candidates.slice(0, 5)
+
+  return {
+    summary:
+      "Recommendations generated using deterministic ranking because the AI provider was unavailable.",
+    warnings: [reason],
+    recommendations: top.map((model, index) => ({
+      name: model.name,
+      display_name: model.display_name,
+      reason:
+        index === 0
+          ? "Best overall fit based on hardware compatibility and use-case ranking."
+          : "Good alternative based on compatibility and performance trade-offs.",
+      tradeoffs: model.weaknesses,
+      ollama_install: model.ollama_install,
+      confidence: index === 0 ? 0.78 : 0.68,
+    })),
+  }
+}
+
 export async function OPTIONS(request: Request) {
   return new NextResponse(null, {
     status: 204,
@@ -389,7 +410,26 @@ export async function POST(request: Request) {
     const ranked = rankModels(filtered, normalizedPayload)
     const topCandidates = ranked.slice(0, 10)
 
-    const geminiResult = await callGemini(normalizedPayload, topCandidates)
+    let geminiResult: {
+      summary: string
+      warnings: string[]
+      recommendations: Array<{
+        name: string
+        display_name: string
+        reason: string
+        tradeoffs: string
+        ollama_install: string
+        confidence: number
+      }>
+    }
+
+    try {
+      geminiResult = await callGemini(normalizedPayload, topCandidates)
+    } catch (providerError) {
+      const detail =
+        providerError instanceof Error ? providerError.message : "Gemini provider unavailable."
+      geminiResult = fallbackRecommendations(topCandidates, detail)
+    }
 
     return NextResponse.json({
       ok: true,

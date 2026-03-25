@@ -3,7 +3,6 @@
 import * as React from "react"
 import { ChevronsUpDown } from "lucide-react"
 
-import { Button } from "@/components/ui/button"
 import {
   Command,
   CommandEmpty,
@@ -38,6 +37,7 @@ function getManufacturer(displayName: string): (typeof groupOrder)[number] {
 
 export function GpuSelector({ gpus, value, onChange, error }: GpuSelectorProps) {
   const [open, setOpen] = React.useState(false)
+  const listboxId = React.useId()
 
   const selectedGpu = gpus.find((gpu) => gpu.id === value)
 
@@ -64,14 +64,15 @@ export function GpuSelector({ gpus, value, onChange, error }: GpuSelectorProps) 
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger
           render={
-            <Button
+            <button
+              type="button"
               id="gpu-selector"
-              variant="outline"
               role="combobox"
               aria-expanded={open}
+              aria-controls={listboxId}
               aria-label="Select GPU"
               className={cn(
-                "h-11 w-full justify-between rounded-xl border-slate-700 bg-slate-900 text-slate-100 hover:bg-slate-800",
+                "inline-flex h-11 w-full items-center justify-between rounded-xl border border-slate-700 bg-slate-900 px-3 text-sm text-slate-100 transition-colors hover:bg-slate-800",
                 error && "border-red-500/70"
               )}
             >
@@ -79,10 +80,10 @@ export function GpuSelector({ gpus, value, onChange, error }: GpuSelectorProps) 
                 ? `${selectedGpu.display_name} (${selectedGpu.vram_gb}GB)`
                 : "Select a GPU"}
               <ChevronsUpDown className="ml-2 size-4 shrink-0 text-slate-400" />
-            </Button>
+            </button>
           }
         />
-        <PopoverContent className="w-[--anchor-width] border border-slate-700 bg-slate-900 p-0 text-slate-100">
+        <PopoverContent id={listboxId} className="w-[--anchor-width] border border-slate-700 bg-slate-900 p-0 text-slate-100">
           <Command>
             <CommandInput placeholder="Search GPU..." aria-label="Search GPU" />
             <CommandList>
