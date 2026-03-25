@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { GitHub, Globe, Linkedin } from "lucide-react"
+import { Globe } from "lucide-react"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
@@ -72,11 +72,11 @@ export default function AboutPage() {
           </p>
           <div className="mt-6 grid gap-3 sm:grid-cols-3">
             <Link href="https://linkedin.com/in/mohanprasath21" target="_blank" rel="noopener noreferrer" className="rounded-xl border border-slate-700 bg-slate-950/70 p-4 hover:border-blue-500/50">
-              <p className="inline-flex items-center gap-2 text-slate-100"><Linkedin className="size-4" /> LinkedIn</p>
+              <p className="inline-flex items-center gap-2 text-slate-100">LinkedIn</p>
               <p className="mt-2 text-sm text-slate-400">Professional updates and community posts.</p>
             </Link>
             <Link href="https://github.com/mohanprasath-dev" target="_blank" rel="noopener noreferrer" className="rounded-xl border border-slate-700 bg-slate-950/70 p-4 hover:border-blue-500/50">
-              <p className="inline-flex items-center gap-2 text-slate-100"><GitHub className="size-4" /> GitHub</p>
+              <p className="inline-flex items-center gap-2 text-slate-100">GitHub</p>
               <p className="mt-2 text-sm text-slate-400">Open-source projects, experiments, and releases.</p>
             </Link>
             <Link href="https://mohanprasath.dev" target="_blank" rel="noopener noreferrer" className="rounded-xl border border-slate-700 bg-slate-950/70 p-4 hover:border-blue-500/50">

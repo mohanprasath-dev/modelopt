@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { GitHub, Globe, Linkedin } from "lucide-react"
+import { Globe } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -86,10 +86,10 @@ export function Footer() {
         <p>Built by Mohan Prasath</p>
         <div className="flex items-center gap-3">
           <Link href="https://linkedin.com/in/mohanprasath21" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-            <Linkedin className="size-4" />
+            <span className="text-xs uppercase tracking-wide">LinkedIn</span>
           </Link>
           <Link href="https://github.com/mohanprasath-dev" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-            <GitHub className="size-4" />
+            <span className="text-xs uppercase tracking-wide">GitHub</span>
           </Link>
           <Link href="https://mohanprasath.dev" target="_blank" rel="noopener noreferrer" aria-label="Website">
             <Globe className="size-4" />
