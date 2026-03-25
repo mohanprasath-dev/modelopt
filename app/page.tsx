@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 export default function Home() {
   return (
     <main className="bg-slate-950 text-slate-100">
-      <section className="relative overflow-hidden px-4 py-20 sm:px-6 sm:py-28">
+      <section className="relative flex min-h-[calc(100dvh-4rem)] items-center overflow-hidden px-4 py-20 sm:px-6 sm:py-28">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(59,130,246,0.2),transparent_35%),radial-gradient(circle_at_80%_20%,rgba(14,165,233,0.2),transparent_40%),linear-gradient(to_bottom,#020617,#0f172a)]" />
         <div className="relative mx-auto w-full max-w-7xl">
           <div className="mx-auto max-w-3xl text-center">

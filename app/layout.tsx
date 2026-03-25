@@ -51,7 +51,7 @@ export default function RootLayout({
         </a>
         <Navbar />
         <Breadcrumb />
-        <main id="main-content">{children}</main>
+        <div id="main-content" className="min-h-[calc(100dvh-4rem)]">{children}</div>
         <Footer />
       </body>
     </html>

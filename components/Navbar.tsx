@@ -17,6 +17,14 @@ const navItems = [
   { href: "/about", label: "About" },
 ]
 
+function isItemActive(pathname: string, href: string) {
+  if (href === "/") {
+    return pathname === "/"
+  }
+
+  return pathname === href || pathname.startsWith(`${href}/`)
+}
+
 export function Navbar() {
   const pathname = usePathname()
   const [open, setOpen] = React.useState(false)
@@ -28,12 +36,16 @@ export function Navbar() {
   React.useEffect(() => {
     if (!open) {
       document.body.style.overflow = ""
+      document.documentElement.style.overflow = ""
       return
     }
 
     document.body.style.overflow = "hidden"
+    document.documentElement.style.overflow = "hidden"
+
     return () => {
       document.body.style.overflow = ""
+      document.documentElement.style.overflow = ""
     }
   }, [open])
 
@@ -54,7 +66,7 @@ export function Navbar() {
 
         <nav className="hidden items-center gap-2 md:flex" aria-label="Primary">
           {navItems.map((item) => {
-            const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`)
+            const isActive = isItemActive(pathname, item.href)
             return (
               <Link
                 key={item.href}
@@ -63,6 +75,7 @@ export function Navbar() {
                   "inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm text-slate-300 transition-colors hover:text-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400",
                   isActive && "bg-slate-800/70 text-slate-100"
                 )}
+                aria-current={isActive ? "page" : undefined}
               >
                 {item.label}
                 {item.badge ? (
@@ -93,24 +106,26 @@ export function Navbar() {
       </div>
 
       {open ? (
-        <div className="fixed inset-x-0 top-16 z-50 border-t border-slate-800/70 bg-slate-900/95 px-4 py-4 pb-6 shadow-2xl backdrop-blur-xl md:hidden">
+        <div className="fixed inset-x-0 bottom-0 top-16 z-50 overflow-y-auto border-t border-slate-800/70 bg-slate-900/95 px-4 py-4 pb-6 shadow-2xl backdrop-blur-xl md:hidden">
           <nav className="flex flex-col gap-2" aria-label="Mobile">
             {navItems.map((item) => {
-              const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`)
+              const isActive = isItemActive(pathname, item.href)
               return (
                 <Link
                   key={item.href}
                   href={item.href}
+                  onClick={() => setOpen(false)}
                   className={cn(
                     "rounded-md px-3 py-3 text-sm text-slate-300",
                     isActive && "bg-slate-800 text-slate-100"
                   )}
+                  aria-current={isActive ? "page" : undefined}
                 >
                   {item.label}
                 </Link>
               )
             })}
-            <Link href="/app" className="mt-2">
+            <Link href="/app" className="mt-2" onClick={() => setOpen(false)}>
               <Button className="w-full bg-blue-500 text-white hover:bg-blue-400">Get Started</Button>
             </Link>
           </nav>

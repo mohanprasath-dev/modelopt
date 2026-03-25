@@ -79,6 +79,7 @@ export function OptimizationForm({ initialValues, onProgressChange, onDraftChang
   const router = useRouter()
   const [submitError, setSubmitError] = React.useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = React.useState(false)
+  const lastPublishedRef = React.useRef<string>("")
   const vramErrorId = React.useId()
   const submitErrorId = React.useId()
 
@@ -123,12 +124,24 @@ export function OptimizationForm({ initialValues, onProgressChange, onDraftChang
       Boolean(watchedValues.deployment),
     ].filter(Boolean).length
 
-    onProgressChange?.({
+    const nextProgress = {
       completed,
       total,
       percentage: Math.round((completed / total) * 100),
-    })
+    }
 
+    const publishPayload = {
+      draft: watchedValues,
+      progress: nextProgress,
+    }
+    const nextSignature = JSON.stringify(publishPayload)
+
+    if (lastPublishedRef.current === nextSignature) {
+      return
+    }
+
+    lastPublishedRef.current = nextSignature
+    onProgressChange?.(nextProgress)
     onDraftChange?.(watchedValues)
   }, [watchedValues, onProgressChange, onDraftChange])
 
