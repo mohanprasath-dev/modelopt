@@ -111,6 +111,9 @@ export function OptimizationForm() {
         throw new Error(payload?.error ?? "Unable to optimize your setup right now.")
       }
 
+      const payload = (await response.json()) as unknown
+      sessionStorage.setItem("modelopt_last_result", JSON.stringify(payload))
+
       toast.success("Optimization complete. Redirecting to results...")
       router.push("/results")
     } catch (error) {
