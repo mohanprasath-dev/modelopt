@@ -52,6 +52,19 @@ const formSchema = baseSchema.superRefine((data, ctx) => {
 })
 
 type OptimizationFormData = z.infer<typeof formSchema>
+export type { OptimizationFormData }
+
+export interface OptimizationProgress {
+  completed: number
+  total: number
+  percentage: number
+}
+
+interface OptimizationFormProps {
+  initialValues?: Partial<OptimizationFormData>
+  onProgressChange?: (progress: OptimizationProgress) => void
+  onDraftChange?: (draft: Partial<OptimizationFormData>) => void
+}
 
 const defaultValues: OptimizationFormData = {
   gpu: "",
@@ -62,24 +75,60 @@ const defaultValues: OptimizationFormData = {
   deployment: "local",
 }
 
-export function OptimizationForm() {
+export function OptimizationForm({ initialValues, onProgressChange, onDraftChange }: OptimizationFormProps) {
   const router = useRouter()
   const [submitError, setSubmitError] = React.useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = React.useState(false)
 
+  const mergedDefaults = React.useMemo(
+    () => ({
+      ...defaultValues,
+      ...initialValues,
+      use_cases: initialValues?.use_cases ?? defaultValues.use_cases,
+    }),
+    [initialValues]
+  )
+
   const {
     control,
     watch,
+    reset,
     setValue,
     handleSubmit,
     formState: { errors, isValid },
   } = useForm<OptimizationFormData>({
     resolver: zodResolver(formSchema),
-    defaultValues,
+    defaultValues: mergedDefaults,
     mode: "onChange",
   })
 
   const selectedGpuId = watch("gpu")
+
+  React.useEffect(() => {
+    reset(mergedDefaults)
+  }, [mergedDefaults, reset])
+
+  const watchedValues = watch()
+
+  React.useEffect(() => {
+    const total = 6
+    const completed = [
+      Boolean(watchedValues.gpu),
+      (watchedValues.ram_gb ?? 0) >= 8,
+      (watchedValues.vram_gb ?? 0) >= 1,
+      (watchedValues.use_cases?.length ?? 0) > 0,
+      (watchedValues.speed_preference ?? 0) >= 1,
+      Boolean(watchedValues.deployment),
+    ].filter(Boolean).length
+
+    onProgressChange?.({
+      completed,
+      total,
+      percentage: Math.round((completed / total) * 100),
+    })
+
+    onDraftChange?.(watchedValues)
+  }, [watchedValues, onProgressChange, onDraftChange])
 
   React.useEffect(() => {
     if (!selectedGpuId) return

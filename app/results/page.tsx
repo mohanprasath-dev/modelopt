@@ -4,7 +4,7 @@ import * as React from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
-import { ArrowLeft, Share2, Printer, RotateCcw } from "lucide-react"
+import { ArrowLeft, Share2, Printer, RotateCcw, Scale } from "lucide-react"
 
 import modelsData from "@/lib/data/models.json"
 import gpusData from "@/lib/data/gpus.json"
@@ -60,6 +60,16 @@ interface ModelSpec {
     rtx_3060: number
     apple_m2: number
   }
+}
+
+interface CompareModel {
+  name: string
+  display_name: string
+  size: string
+  vram_min_gb: number
+  context_window: number
+  use_cases: string[]
+  est_speed_tps: number
 }
 
 const modelLookup = new Map((modelsData.models as ModelSpec[]).map((item) => [item.name, item]))
@@ -140,6 +150,8 @@ export default function ResultsPage() {
   const [loading, setLoading] = React.useState(true)
   const [error, setError] = React.useState<string | null>(null)
   const [result, setResult] = React.useState<OptimizeApiResult | null>(null)
+  const [generatedAt, setGeneratedAt] = React.useState("")
+  const [selectedCompare, setSelectedCompare] = React.useState<string[]>([])
 
   const loadData = React.useCallback(async () => {
     setLoading(true)
@@ -158,6 +170,7 @@ export default function ResultsPage() {
       }
 
       setResult(parsed)
+      setGeneratedAt(new Date().toLocaleString())
     } catch (loadError) {
       console.error(loadError)
       setError("We could not load your results. Please optimize again.")
@@ -179,6 +192,64 @@ export default function ResultsPage() {
       return () => window.clearTimeout(timer)
     }
   }, [loading, result, error, router])
+
+  const comparePool = React.useMemo(() => {
+    return new Map<string, CompareModel>(
+      (modelsData.models as ModelSpec[]).map((model) => [
+        model.name,
+        {
+          name: model.name,
+          display_name: model.display_name,
+          size: model.size,
+          vram_min_gb: model.vram_min_gb,
+          context_window: model.context_window,
+          use_cases: model.use_cases,
+          est_speed_tps: averageSpeed(model),
+        },
+      ])
+    )
+  }, [])
+
+  React.useEffect(() => {
+    if (!result) {
+      return
+    }
+
+    const fromQuery = (new URLSearchParams(window.location.search).get("compare") ?? "")
+      .split(",")
+      .map((item) => item.trim())
+      .filter(Boolean)
+      .filter((name) => comparePool.has(name))
+      .slice(0, 4)
+
+    if (fromQuery.join(",") !== selectedCompare.join(",")) {
+      setSelectedCompare(fromQuery)
+    }
+  }, [comparePool, result, selectedCompare])
+
+  React.useEffect(() => {
+    if (!result) {
+      return
+    }
+
+    const params = new URLSearchParams(window.location.search)
+    const currentCompare = params.get("compare") ?? ""
+    const nextCompare = selectedCompare.join(",")
+
+    if (currentCompare === nextCompare) {
+      return
+    }
+
+    if (nextCompare) {
+      params.set("compare", nextCompare)
+    } else {
+      params.delete("compare")
+    }
+
+    const suffix = params.toString()
+    const nextUrl = suffix ? `${window.location.pathname}?${suffix}` : window.location.pathname
+    window.history.replaceState({}, "", nextUrl)
+  }, [result, selectedCompare])
 
   if (loading) {
     return (
@@ -229,6 +300,24 @@ export default function ResultsPage() {
   const upgradeSuggestion = findUpgradeSuggestion(result.warnings)
   const systemScore = getSystemScore(result.input.vram_gb, result.input.ram_gb)
 
+  const toggleCompare = (name: string) => {
+    setSelectedCompare((prev) => {
+      if (prev.includes(name)) {
+        return prev.filter((item) => item !== name)
+      }
+
+      if (prev.length >= 4) {
+        return prev
+      }
+
+      return [...prev, name]
+    })
+  }
+
+  const selectedModels = selectedCompare
+    .map((name) => comparePool.get(name))
+    .filter((model): model is CompareModel => Boolean(model))
+
   const share = async () => {
     await navigator.clipboard.writeText(window.location.href)
   }
@@ -249,7 +338,7 @@ export default function ResultsPage() {
             </Link>
             <h1 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">Your Optimized AI Stack</h1>
             <p className="mt-2 text-sm text-slate-400">
-              Generated on {new Date().toLocaleString()}
+              Generated on {generatedAt || new Date().toLocaleString()}
             </p>
           </div>
         </header>
@@ -277,15 +366,63 @@ export default function ResultsPage() {
             }}
             className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3"
           >
-            {cards.map((card, index) => (
-              <ModelRecommendationCard key={card.name} data={card} index={index} />
-            ))}
+            {cards.map((card, index) => {
+              const active = selectedCompare.includes(card.name)
+
+              return (
+                <div key={card.name} className="space-y-2">
+                  <ModelRecommendationCard data={card} index={index} />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => toggleCompare(card.name)}
+                    disabled={!active && selectedCompare.length >= 4}
+                    className="w-full border-slate-700 text-slate-200"
+                  >
+                    <Scale className="mr-2 size-4" />
+                    {active ? "Remove from compare" : "Add to compare"}
+                  </Button>
+                </div>
+              )
+            })}
           </motion.div>
         </section>
 
+        {selectedModels.length > 0 ? (
+          <section className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <h2 className="text-xl font-semibold text-slate-100">Comparison Workspace</h2>
+              <div className="flex gap-2">
+                <Button variant="outline" onClick={() => setSelectedCompare([])}>
+                  Clear Selection
+                </Button>
+                <Link href={`/compare?models=${encodeURIComponent(selectedCompare.join(","))}`}>
+                  <Button className="bg-blue-500 text-white hover:bg-blue-400">Open Compare Page</Button>
+                </Link>
+              </div>
+            </div>
+            <p className="mt-2 text-sm text-slate-400">Selected {selectedModels.length}/4 models. Your selection is encoded in the URL for sharing.</p>
+            <div className="mt-4 grid gap-3 md:grid-cols-2">
+              {selectedModels.map((model) => (
+                <article key={model.name} className="rounded-xl border border-slate-700 bg-slate-950/70 p-4">
+                  <h3 className="text-base font-semibold text-slate-100">{model.display_name}</h3>
+                  <p className="mt-2 text-sm text-slate-300">{model.size} · {model.vram_min_gb}GB VRAM min</p>
+                  <p className="mt-1 text-sm text-slate-400">Context {model.context_window.toLocaleString()} · ~{Math.round(model.est_speed_tps)} tok/s</p>
+                  <p className="mt-2 text-xs text-slate-500">{model.use_cases.join(", ")}</p>
+                </article>
+              ))}
+            </div>
+          </section>
+        ) : null}
+
         {upgradeSuggestion ? <UpgradeSuggestion suggestion={upgradeSuggestion} /> : null}
 
-        <AlternativeModelsTable models={alternatives} />
+        <AlternativeModelsTable
+          models={alternatives}
+          selectedNames={selectedCompare}
+          onToggleCompare={toggleCompare}
+          maxSelections={4}
+        />
 
         <section className="sticky bottom-4 rounded-2xl border border-slate-800 bg-slate-900/90 p-4 backdrop-blur-sm">
           <div className="flex flex-wrap items-center justify-between gap-3">

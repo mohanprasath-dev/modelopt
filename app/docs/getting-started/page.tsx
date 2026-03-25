@@ -1,8 +1,18 @@
+import Link from "next/link"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
   title: "Docs - Getting Started",
   description: "Get started with ModelOpt optimization workflow.",
+  alternates: {
+    canonical: "/docs/getting-started",
+  },
+  openGraph: {
+    title: "ModelOpt Getting Started",
+    description: "Set up your first optimization flow and understand hardware fit quickly.",
+    url: "/docs/getting-started",
+    type: "article",
+  },
 }
 
 export default function GettingStartedPage() {
@@ -32,6 +42,15 @@ export default function GettingStartedPage() {
             <li>- Retry after one minute if rate limited.</li>
             <li>- Use cloud mode if local VRAM is below model minimum.</li>
           </ul>
+        </section>
+
+        <section className="rounded-xl border border-slate-800 bg-slate-900/60 p-4">
+          <h2 className="text-xl font-semibold">Next steps</h2>
+          <div className="mt-2 flex flex-wrap gap-2 text-sm text-slate-300">
+            <Link href="/docs/model-comparison" className="rounded-md border border-slate-700 bg-slate-950/60 px-3 py-1.5 hover:border-blue-500/40">Open model comparison</Link>
+            <Link href="/blog/vram-vs-ram" className="rounded-md border border-slate-700 bg-slate-950/60 px-3 py-1.5 hover:border-blue-500/40">Read VRAM vs RAM guide</Link>
+            <Link href="/app" className="rounded-md border border-slate-700 bg-slate-950/60 px-3 py-1.5 hover:border-blue-500/40">Go to optimizer</Link>
+          </div>
         </section>
       </article>
     </main>

@@ -1,3 +1,20 @@
+import type { Metadata } from "next"
+import Link from "next/link"
+
+export const metadata: Metadata = {
+  title: "Quantization Explained: Q4 vs Q8 vs FP16",
+  description: "Understand quantization tradeoffs and how to choose between memory fit and output quality.",
+  alternates: {
+    canonical: "/blog/quantization-explained",
+  },
+  openGraph: {
+    title: "Quantization Explained: Q4 vs Q8 vs FP16",
+    description: "Understand quantization tradeoffs and how to choose between memory fit and output quality.",
+    url: "/blog/quantization-explained",
+    type: "article",
+  },
+}
+
 export default function BlogQuantizationPage() {
   return (
     <main className="px-4 py-12 text-slate-100 sm:px-6">
@@ -5,6 +22,9 @@ export default function BlogQuantizationPage() {
         <h1>Quantization Explained: Q4 vs Q8 vs FP16</h1>
         <p>Lower-bit quantization improves memory fit and speed but may reduce quality on complex reasoning tasks.</p>
         <p>For most local setups, Q4 or Q5 are practical defaults, while Q8/FP16 are better when memory headroom allows.</p>
+        <p>
+          Try recommendations in the <Link href="/app">optimizer</Link> and cross-check candidates in the <Link href="/docs/model-comparison">model comparison chart</Link>.
+        </p>
       </article>
     </main>
   )

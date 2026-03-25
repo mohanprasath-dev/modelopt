@@ -18,6 +18,9 @@ type SortKey = "name" | "size" | "vram" | "use_cases" | "speed"
 
 interface AlternativeModelsTableProps {
   models: AlternativeModel[]
+  selectedNames?: string[]
+  onToggleCompare?: (modelName: string) => void
+  maxSelections?: number
 }
 
 function parseSize(size: string): number {
@@ -25,7 +28,12 @@ function parseSize(size: string): number {
   return match ? Number(match[1]) : 0
 }
 
-export function AlternativeModelsTable({ models }: AlternativeModelsTableProps) {
+export function AlternativeModelsTable({
+  models,
+  selectedNames = [],
+  onToggleCompare,
+  maxSelections = 4,
+}: AlternativeModelsTableProps) {
   const [open, setOpen] = React.useState(false)
   const [sortBy, setSortBy] = React.useState<SortKey>("speed")
   const [descending, setDescending] = React.useState(true)
@@ -121,6 +129,7 @@ export function AlternativeModelsTable({ models }: AlternativeModelsTableProps) 
                     Est. Speed <ChevronsUpDown className="ml-1 size-3" />
                   </Button>
                 </th>
+                <th className="py-2 text-right text-slate-400">Compare</th>
               </tr>
             </thead>
             <tbody>
@@ -131,6 +140,17 @@ export function AlternativeModelsTable({ models }: AlternativeModelsTableProps) 
                   <td className="py-2 pr-4">{model.vram_min_gb}GB</td>
                   <td className="py-2 pr-4 text-slate-300">{model.use_cases.join(", ")}</td>
                   <td className="py-2">{Math.round(model.est_speed_tps)} tok/s</td>
+                  <td className="py-2 text-right">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="h-8 border-slate-700 text-xs text-slate-200"
+                      onClick={() => onToggleCompare?.(model.name)}
+                      disabled={!selectedNames.includes(model.name) && selectedNames.length >= maxSelections}
+                    >
+                      {selectedNames.includes(model.name) ? "Remove" : "Compare"}
+                    </Button>
+                  </td>
                 </tr>
               ))}
             </tbody>

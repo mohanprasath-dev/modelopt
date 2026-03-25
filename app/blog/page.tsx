@@ -6,6 +6,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 export const metadata: Metadata = {
   title: "Blog",
   description: "ModelOpt technical articles and guides.",
+  alternates: {
+    canonical: "/blog",
+  },
+  openGraph: {
+    title: "ModelOpt Blog",
+    description: "Technical guides on model selection, quantization, and hardware planning.",
+    url: "/blog",
+    type: "website",
+  },
 }
 
 const posts = [
@@ -29,6 +38,24 @@ export default function BlogPage() {
             </Link>
           ))}
         </div>
+
+        <section className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6">
+          <h2 className="text-xl font-semibold">Continue Learning</h2>
+          <div className="mt-3 grid gap-3 text-sm text-slate-300 sm:grid-cols-2">
+            <Link href="/docs/getting-started" className="rounded-lg border border-slate-700 bg-slate-950/60 px-3 py-2 hover:border-blue-500/40">
+              Docs: Getting Started
+            </Link>
+            <Link href="/docs/model-comparison" className="rounded-lg border border-slate-700 bg-slate-950/60 px-3 py-2 hover:border-blue-500/40">
+              Docs: Model Comparison Chart
+            </Link>
+            <Link href="/compare" className="rounded-lg border border-slate-700 bg-slate-950/60 px-3 py-2 hover:border-blue-500/40">
+              Compare Workspace
+            </Link>
+            <Link href="/app" className="rounded-lg border border-slate-700 bg-slate-950/60 px-3 py-2 hover:border-blue-500/40">
+              Start an Optimization
+            </Link>
+          </div>
+        </section>
       </div>
     </main>
   )
