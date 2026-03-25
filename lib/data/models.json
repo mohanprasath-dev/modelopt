@@ -1,0 +1,411 @@
+{
+  "_meta": {
+    "generated_on": "2026-03-25",
+    "notes": "Token/sec numbers are conservative single-user local inference estimates for Q4_K_M to Q5_K_M class quantization under typical community setups. They are not guaranteed benchmarks.",
+    "citation_comment": "Primary references: Ollama model library pages for sizes/context/tags, official model cards, and vendor benchmark posts. See sources[] in each model entry.",
+    "common_quantizations": ["Q4_K_M", "Q5_K_M", "Q8_0", "FP16"],
+    "estimation_method": "Estimated throughput by scaling known community llama.cpp/Ollama ranges with model size, context length overhead, and memory bandwidth limits."
+  },
+  "models": [
+    {
+      "name": "llama3.1:8b",
+      "display_name": "Llama 3.1 8B",
+      "size": "8B",
+      "vram_min_gb": 6,
+      "vram_recommended_gb": 10,
+      "ram_min_gb": 8,
+      "quantizations": ["Q4_K_M", "Q5_K_M", "Q8_0", "FP16"],
+      "use_cases": ["chat", "general", "instruction-following", "rag"],
+      "tokens_per_sec_estimate": { "rtx_4090": 90, "rtx_4070": 52, "rtx_3060": 28, "apple_m2": 22 },
+      "context_window": 128000,
+      "ollama_install": "ollama run llama3.1:8b",
+      "alternatives": {
+        "llama_cpp": "Download GGUF from Hugging Face quantization repos for Meta-Llama-3.1-8B-Instruct",
+        "huggingface": "meta-llama/Llama-3.1-8B-Instruct"
+      },
+      "strengths": "Strong all-round quality under 10B with large 128K context.",
+      "weaknesses": "Reasoning depth can lag larger 30B+ models.",
+      "sources": ["https://ollama.com/library/llama3.1", "https://ai.meta.com/blog/meta-llama-3-1/", "https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct"]
+    },
+    {
+      "name": "llama3.1:70b",
+      "display_name": "Llama 3.1 70B",
+      "size": "70B",
+      "vram_min_gb": 40,
+      "vram_recommended_gb": 80,
+      "ram_min_gb": 64,
+      "quantizations": ["Q4_K_M", "Q5_K_M", "Q8_0"],
+      "use_cases": ["advanced-reasoning", "agent", "analysis", "multilingual"],
+      "tokens_per_sec_estimate": { "rtx_4090": 13, "rtx_4070": 5, "rtx_3060": 2, "apple_m2": 2 },
+      "context_window": 128000,
+      "ollama_install": "ollama run llama3.1:70b",
+      "alternatives": {
+        "llama_cpp": "Use multi-GPU/offload GGUF builds for 70B class models",
+        "huggingface": "meta-llama/Llama-3.1-70B-Instruct"
+      },
+      "strengths": "High quality for planning, synthesis, and multilingual generation.",
+      "weaknesses": "High memory and latency cost for local use.",
+      "sources": ["https://ollama.com/library/llama3.1", "https://ai.meta.com/blog/meta-llama-3-1/", "https://huggingface.co/meta-llama/Llama-3.1-70B-Instruct"]
+    },
+    {
+      "name": "mistral:7b",
+      "display_name": "Mistral 7B",
+      "size": "7B",
+      "vram_min_gb": 5,
+      "vram_recommended_gb": 9,
+      "ram_min_gb": 8,
+      "quantizations": ["Q4_K_M", "Q5_K_M", "Q8_0", "FP16"],
+      "use_cases": ["chat", "instruction-following", "function-calling"],
+      "tokens_per_sec_estimate": { "rtx_4090": 100, "rtx_4070": 58, "rtx_3060": 30, "apple_m2": 24 },
+      "context_window": 32000,
+      "ollama_install": "ollama run mistral:7b",
+      "alternatives": {
+        "llama_cpp": "Use GGUF variants of Mistral-7B-Instruct-v0.3",
+        "huggingface": "mistralai/Mistral-7B-Instruct-v0.3"
+      },
+      "strengths": "Fast and reliable 7B-class instruction model.",
+      "weaknesses": "Lower quality than newer 12B-14B families on hard reasoning.",
+      "sources": ["https://ollama.com/library/mistral", "https://mistral.ai/news/announcing-mistral-7b/", "https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.3"]
+    },
+    {
+      "name": "mistral-nemo:12b",
+      "display_name": "Mistral NeMo 12B",
+      "size": "12B",
+      "vram_min_gb": 8,
+      "vram_recommended_gb": 14,
+      "ram_min_gb": 16,
+      "quantizations": ["Q4_K_M", "Q5_K_M", "Q8_0", "FP16"],
+      "use_cases": ["chat", "coding", "reasoning", "long-context"],
+      "tokens_per_sec_estimate": { "rtx_4090": 62, "rtx_4070": 35, "rtx_3060": 18, "apple_m2": 14 },
+      "context_window": 128000,
+      "ollama_install": "ollama run mistral-nemo:12b",
+      "alternatives": {
+        "llama_cpp": "Use GGUF exports for mistralai/Mistral-Nemo-Instruct-2407",
+        "huggingface": "mistralai/Mistral-Nemo-Instruct-2407"
+      },
+      "strengths": "Very strong 12B quality with large context support.",
+      "weaknesses": "Throughput drops with very long prompt windows.",
+      "sources": ["https://ollama.com/library/mistral-nemo", "https://mistral.ai/news/mistral-nemo/", "https://huggingface.co/mistralai/Mistral-Nemo-Instruct-2407"]
+    },
+    {
+      "name": "deepseek-coder:6.7b",
+      "display_name": "DeepSeek Coder 6.7B",
+      "size": "6.7B",
+      "vram_min_gb": 5,
+      "vram_recommended_gb": 9,
+      "ram_min_gb": 8,
+      "quantizations": ["Q4_K_M", "Q5_K_M", "Q8_0"],
+      "use_cases": ["coding", "code-review", "code-completion"],
+      "tokens_per_sec_estimate": { "rtx_4090": 108, "rtx_4070": 62, "rtx_3060": 32, "apple_m2": 24 },
+      "context_window": 16000,
+      "ollama_install": "ollama run deepseek-coder:6.7b",
+      "alternatives": {
+        "llama_cpp": "Use GGUF conversions from deepseek-ai DeepSeek-Coder-6.7B-Instruct",
+        "huggingface": "deepseek-ai/deepseek-coder-6.7b-instruct"
+      },
+      "strengths": "Good code generation quality per watt for local use.",
+      "weaknesses": "Shorter context versus newer coder models.",
+      "sources": ["https://ollama.com/library/deepseek-coder", "https://huggingface.co/deepseek-ai/deepseek-coder-6.7b-instruct"]
+    },
+    {
+      "name": "deepseek-coder:33b",
+      "display_name": "DeepSeek Coder 33B",
+      "size": "33B",
+      "vram_min_gb": 22,
+      "vram_recommended_gb": 40,
+      "ram_min_gb": 32,
+      "quantizations": ["Q4_K_M", "Q5_K_M", "Q8_0"],
+      "use_cases": ["coding", "repository-analysis", "test-generation"],
+      "tokens_per_sec_estimate": { "rtx_4090": 24, "rtx_4070": 10, "rtx_3060": 4, "apple_m2": 3 },
+      "context_window": 16000,
+      "ollama_install": "ollama run deepseek-coder:33b",
+      "alternatives": {
+        "llama_cpp": "Use multi-GPU GGUF with KV offload for practical latency",
+        "huggingface": "deepseek-ai/deepseek-coder-33b-instruct"
+      },
+      "strengths": "High-quality coding and bug-fixing for open model class.",
+      "weaknesses": "Requires flagship hardware to be interactive.",
+      "sources": ["https://ollama.com/library/deepseek-coder", "https://huggingface.co/deepseek-ai"]
+    },
+    {
+      "name": "phi3:mini",
+      "display_name": "Phi-3 Mini",
+      "size": "3.8B",
+      "vram_min_gb": 3,
+      "vram_recommended_gb": 6,
+      "ram_min_gb": 8,
+      "quantizations": ["Q4_K_M", "Q5_K_M", "Q8_0", "FP16"],
+      "use_cases": ["edge", "chat", "reasoning", "low-latency"],
+      "tokens_per_sec_estimate": { "rtx_4090": 165, "rtx_4070": 95, "rtx_3060": 50, "apple_m2": 38 },
+      "context_window": 4000,
+      "ollama_install": "ollama run phi3:mini",
+      "alternatives": {
+        "llama_cpp": "Use GGUF variants for microsoft/Phi-3-mini-4k-instruct",
+        "huggingface": "microsoft/Phi-3-mini-4k-instruct"
+      },
+      "strengths": "Excellent small-model reasoning for constrained devices.",
+      "weaknesses": "4K default context limits long RAG chains.",
+      "sources": ["https://ollama.com/library/phi3", "https://aka.ms/phi3-tech-report", "https://huggingface.co/microsoft/Phi-3-mini-4k-instruct"]
+    },
+    {
+      "name": "phi3:medium",
+      "display_name": "Phi-3 Medium",
+      "size": "14B",
+      "vram_min_gb": 10,
+      "vram_recommended_gb": 18,
+      "ram_min_gb": 16,
+      "quantizations": ["Q4_K_M", "Q5_K_M", "Q8_0", "FP16"],
+      "use_cases": ["reasoning", "chat", "analysis"],
+      "tokens_per_sec_estimate": { "rtx_4090": 52, "rtx_4070": 29, "rtx_3060": 14, "apple_m2": 11 },
+      "context_window": 128000,
+      "ollama_install": "ollama run phi3:medium",
+      "alternatives": {
+        "llama_cpp": "Use GGUF exports of microsoft/Phi-3-medium-128k-instruct",
+        "huggingface": "microsoft/Phi-3-medium-128k-instruct"
+      },
+      "strengths": "Strong reasoning and long-context quality in 14B class.",
+      "weaknesses": "Can be memory-heavy on 8-12GB GPUs.",
+      "sources": ["https://ollama.com/library/phi3", "https://aka.ms/phi3-tech-report", "https://huggingface.co/microsoft/Phi-3-medium-128k-instruct"]
+    },
+    {
+      "name": "qwen2.5:7b",
+      "display_name": "Qwen 2.5 7B",
+      "size": "7B",
+      "vram_min_gb": 5,
+      "vram_recommended_gb": 9,
+      "ram_min_gb": 8,
+      "quantizations": ["Q4_K_M", "Q5_K_M", "Q8_0", "FP16"],
+      "use_cases": ["chat", "reasoning", "multilingual", "json"],
+      "tokens_per_sec_estimate": { "rtx_4090": 96, "rtx_4070": 56, "rtx_3060": 30, "apple_m2": 23 },
+      "context_window": 32000,
+      "ollama_install": "ollama run qwen2.5:7b",
+      "alternatives": {
+        "llama_cpp": "Use GGUF quantizations of Qwen2.5-7B-Instruct",
+        "huggingface": "Qwen/Qwen2.5-7B-Instruct"
+      },
+      "strengths": "Consistent instruction following and structured output quality.",
+      "weaknesses": "Default runtime context often configured below 128K without rope scaling.",
+      "sources": ["https://ollama.com/library/qwen2.5", "https://qwenlm.github.io/blog/qwen2.5/", "https://huggingface.co/Qwen/Qwen2.5-7B-Instruct"]
+    },
+    {
+      "name": "qwen2.5:14b",
+      "display_name": "Qwen 2.5 14B",
+      "size": "14B",
+      "vram_min_gb": 10,
+      "vram_recommended_gb": 18,
+      "ram_min_gb": 16,
+      "quantizations": ["Q4_K_M", "Q5_K_M", "Q8_0", "FP16"],
+      "use_cases": ["reasoning", "agent", "multilingual", "json"],
+      "tokens_per_sec_estimate": { "rtx_4090": 50, "rtx_4070": 28, "rtx_3060": 13, "apple_m2": 10 },
+      "context_window": 32000,
+      "ollama_install": "ollama run qwen2.5:14b",
+      "alternatives": {
+        "llama_cpp": "Use GGUF quantizations of Qwen2.5-14B-Instruct",
+        "huggingface": "Qwen/Qwen2.5-14B-Instruct"
+      },
+      "strengths": "Better reasoning and coding than 7B tier while still local-friendly on 24GB GPUs.",
+      "weaknesses": "Slower interactive speed on 8-12GB cards with offload.",
+      "sources": ["https://ollama.com/library/qwen2.5", "https://qwenlm.github.io/blog/qwen2.5/", "https://huggingface.co/Qwen/Qwen2.5-14B-Instruct"]
+    },
+    {
+      "name": "qwen2.5-coder:7b",
+      "display_name": "Qwen 2.5 Coder 7B",
+      "size": "7.6B",
+      "vram_min_gb": 6,
+      "vram_recommended_gb": 10,
+      "ram_min_gb": 8,
+      "quantizations": ["Q4_K_M", "Q5_K_M", "Q8_0", "FP16"],
+      "use_cases": ["coding", "refactor", "test-generation", "agents"],
+      "tokens_per_sec_estimate": { "rtx_4090": 90, "rtx_4070": 52, "rtx_3060": 27, "apple_m2": 20 },
+      "context_window": 32768,
+      "ollama_install": "ollama run qwen2.5-coder:7b",
+      "alternatives": {
+        "llama_cpp": "Use GGUF builds from Qwen2.5-Coder-7B-Instruct community conversions",
+        "huggingface": "Qwen/Qwen2.5-Coder-7B-Instruct"
+      },
+      "strengths": "Excellent coding quality for 7B class and strong agent/tool behavior.",
+      "weaknesses": "Full 128K context usually needs YaRN/runtime tuning.",
+      "sources": ["https://huggingface.co/Qwen/Qwen2.5-Coder-7B-Instruct", "https://qwenlm.github.io/blog/qwen2.5-coder-family/", "https://qwen.readthedocs.io/en/latest/benchmark/speed_benchmark.html"]
+    },
+    {
+      "name": "gemma2:9b",
+      "display_name": "Gemma 2 9B",
+      "size": "9B",
+      "vram_min_gb": 7,
+      "vram_recommended_gb": 12,
+      "ram_min_gb": 12,
+      "quantizations": ["Q4_K_M", "Q5_K_M", "Q8_0", "FP16"],
+      "use_cases": ["chat", "analysis", "summarization"],
+      "tokens_per_sec_estimate": { "rtx_4090": 78, "rtx_4070": 45, "rtx_3060": 24, "apple_m2": 18 },
+      "context_window": 8192,
+      "ollama_install": "ollama run gemma2:9b",
+      "alternatives": {
+        "llama_cpp": "Use GGUF quantizations for google/gemma-2-9b-it",
+        "huggingface": "google/gemma-2-9b-it"
+      },
+      "strengths": "High quality-to-size ratio with stable instruction tuning.",
+      "weaknesses": "8K context is shorter than 32K-128K peers.",
+      "sources": ["https://ollama.com/library/gemma2", "https://ai.google.dev/gemma", "https://huggingface.co/google/gemma-2-9b-it"]
+    },
+    {
+      "name": "gemma2:27b",
+      "display_name": "Gemma 2 27B",
+      "size": "27B",
+      "vram_min_gb": 20,
+      "vram_recommended_gb": 34,
+      "ram_min_gb": 32,
+      "quantizations": ["Q4_K_M", "Q5_K_M", "Q8_0"],
+      "use_cases": ["analysis", "reasoning", "enterprise-chat"],
+      "tokens_per_sec_estimate": { "rtx_4090": 27, "rtx_4070": 12, "rtx_3060": 5, "apple_m2": 4 },
+      "context_window": 8192,
+      "ollama_install": "ollama run gemma2:27b",
+      "alternatives": {
+        "llama_cpp": "Use multi-GPU/offload GGUF for interactive latency",
+        "huggingface": "google/gemma-2-27b-it"
+      },
+      "strengths": "Very strong open-model quality in its size class.",
+      "weaknesses": "Requires high-end memory budget locally.",
+      "sources": ["https://ollama.com/library/gemma2", "https://ai.google.dev/gemma", "https://huggingface.co/google/gemma-2-27b-it"]
+    },
+    {
+      "name": "codestral:22b",
+      "display_name": "Codestral 22B",
+      "size": "22B",
+      "vram_min_gb": 16,
+      "vram_recommended_gb": 28,
+      "ram_min_gb": 24,
+      "quantizations": ["Q4_K_M", "Q5_K_M", "Q8_0"],
+      "use_cases": ["coding", "fim", "repository-analysis"],
+      "tokens_per_sec_estimate": { "rtx_4090": 34, "rtx_4070": 16, "rtx_3060": 7, "apple_m2": 6 },
+      "context_window": 32768,
+      "ollama_install": "ollama run codestral:22b",
+      "alternatives": {
+        "llama_cpp": "Use GGUF quantizations for mistralai/Codestral-22B-v0.1",
+        "huggingface": "mistralai/Codestral-22B-v0.1"
+      },
+      "strengths": "Strong code completion and fill-in-the-middle behavior.",
+      "weaknesses": "Heavy for mainstream 8-12GB consumer GPUs.",
+      "sources": ["https://ollama.com/library/codestral", "https://mistral.ai/news/codestral/", "https://huggingface.co/mistralai/Codestral-22B-v0.1"]
+    },
+    {
+      "name": "llama3.2:1b",
+      "display_name": "Llama 3.2 1B",
+      "size": "1B",
+      "vram_min_gb": 2,
+      "vram_recommended_gb": 4,
+      "ram_min_gb": 4,
+      "quantizations": ["Q4_K_M", "Q5_K_M", "Q8_0", "FP16"],
+      "use_cases": ["edge", "rewrite", "assistant-lite"],
+      "tokens_per_sec_estimate": { "rtx_4090": 290, "rtx_4070": 170, "rtx_3060": 90, "apple_m2": 70 },
+      "context_window": 128000,
+      "ollama_install": "ollama run llama3.2:1b",
+      "alternatives": {
+        "llama_cpp": "Use GGUF conversions for Meta Llama 3.2 1B Instruct",
+        "huggingface": "meta-llama/Llama-3.2-1B-Instruct"
+      },
+      "strengths": "Ultra-lightweight and very fast for edge devices.",
+      "weaknesses": "Limited depth and factual robustness versus 7B+ models.",
+      "sources": ["https://ollama.com/library/llama3.2", "https://ai.meta.com/blog/llama-3-2/", "https://huggingface.co/meta-llama/Llama-3.2-1B-Instruct"]
+    },
+    {
+      "name": "llama3.2:3b",
+      "display_name": "Llama 3.2 3B",
+      "size": "3B",
+      "vram_min_gb": 3,
+      "vram_recommended_gb": 6,
+      "ram_min_gb": 6,
+      "quantizations": ["Q4_K_M", "Q5_K_M", "Q8_0", "FP16"],
+      "use_cases": ["chat", "summary", "edge", "tool-use"],
+      "tokens_per_sec_estimate": { "rtx_4090": 185, "rtx_4070": 108, "rtx_3060": 58, "apple_m2": 43 },
+      "context_window": 128000,
+      "ollama_install": "ollama run llama3.2:3b",
+      "alternatives": {
+        "llama_cpp": "Use GGUF variants of Llama-3.2-3B-Instruct",
+        "huggingface": "meta-llama/Llama-3.2-3B-Instruct"
+      },
+      "strengths": "Good quality/speed balance for low-power local assistants.",
+      "weaknesses": "Not ideal for heavy multi-step reasoning.",
+      "sources": ["https://ollama.com/library/llama3.2", "https://ai.meta.com/blog/llama-3-2/", "https://huggingface.co/meta-llama/Llama-3.2-3B-Instruct"]
+    },
+    {
+      "name": "neural-chat:7b",
+      "display_name": "Neural Chat 7B",
+      "size": "7B",
+      "vram_min_gb": 5,
+      "vram_recommended_gb": 9,
+      "ram_min_gb": 8,
+      "quantizations": ["Q4_K_M", "Q5_K_M", "Q8_0"],
+      "use_cases": ["chat", "assistant", "customer-support"],
+      "tokens_per_sec_estimate": { "rtx_4090": 95, "rtx_4070": 54, "rtx_3060": 29, "apple_m2": 22 },
+      "context_window": 32000,
+      "ollama_install": "ollama run neural-chat:7b",
+      "alternatives": {
+        "llama_cpp": "Use GGUF quantizations for Intel neural-chat 7B variants",
+        "huggingface": "Intel/neural-chat-7b-v3-1"
+      },
+      "strengths": "Conversation-focused tuning with stable response style.",
+      "weaknesses": "Reasoning depth below newer 12B+ instruction models.",
+      "sources": ["https://ollama.com/library/neural-chat", "https://huggingface.co/Intel/neural-chat-7b-v3-1"]
+    },
+    {
+      "name": "yi:6b",
+      "display_name": "Yi 6B",
+      "size": "6B",
+      "vram_min_gb": 5,
+      "vram_recommended_gb": 8,
+      "ram_min_gb": 8,
+      "quantizations": ["Q4_K_M", "Q5_K_M", "Q8_0"],
+      "use_cases": ["bilingual", "chat", "general"],
+      "tokens_per_sec_estimate": { "rtx_4090": 112, "rtx_4070": 64, "rtx_3060": 34, "apple_m2": 26 },
+      "context_window": 4096,
+      "ollama_install": "ollama run yi:6b",
+      "alternatives": {
+        "llama_cpp": "Use GGUF quantizations for 01-ai Yi 6B instruction releases",
+        "huggingface": "01-ai/Yi-6B-Chat"
+      },
+      "strengths": "Good bilingual performance and high throughput.",
+      "weaknesses": "Short 4K context in common local runtime builds.",
+      "sources": ["https://ollama.com/library/yi", "https://huggingface.co/01-ai/Yi-6B-Chat"]
+    },
+    {
+      "name": "yi:34b",
+      "display_name": "Yi 34B",
+      "size": "34B",
+      "vram_min_gb": 24,
+      "vram_recommended_gb": 42,
+      "ram_min_gb": 32,
+      "quantizations": ["Q4_K_M", "Q5_K_M", "Q8_0"],
+      "use_cases": ["analysis", "bilingual", "knowledge"],
+      "tokens_per_sec_estimate": { "rtx_4090": 22, "rtx_4070": 9, "rtx_3060": 4, "apple_m2": 3 },
+      "context_window": 4096,
+      "ollama_install": "ollama run yi:34b",
+      "alternatives": {
+        "llama_cpp": "Use multi-GPU/offload GGUF for 34B interactive use",
+        "huggingface": "01-ai/Yi-34B-Chat"
+      },
+      "strengths": "High quality bilingual generation and robust long-form drafting.",
+      "weaknesses": "Local inference cost is high on consumer hardware.",
+      "sources": ["https://ollama.com/library/yi", "https://huggingface.co/01-ai/Yi-34B"]
+    },
+    {
+      "name": "solar:10.7b",
+      "display_name": "Solar 10.7B",
+      "size": "10.7B",
+      "vram_min_gb": 8,
+      "vram_recommended_gb": 13,
+      "ram_min_gb": 12,
+      "quantizations": ["Q4_K_M", "Q5_K_M", "Q8_0", "FP16"],
+      "use_cases": ["chat", "single-turn", "general"],
+      "tokens_per_sec_estimate": { "rtx_4090": 68, "rtx_4070": 39, "rtx_3060": 20, "apple_m2": 15 },
+      "context_window": 4096,
+      "ollama_install": "ollama run solar:10.7b",
+      "alternatives": {
+        "llama_cpp": "Use GGUF quantizations for upstage/SOLAR-10.7B-Instruct-v1.0",
+        "huggingface": "upstage/SOLAR-10.7B-Instruct-v1.0"
+      },
+      "strengths": "Strong sub-30B performance for compact deployment.",
+      "weaknesses": "Designed around shorter context workloads.",
+      "sources": ["https://ollama.com/library/solar", "https://huggingface.co/upstage/SOLAR-10.7B-Instruct-v1.0", "https://www.upstage.ai/"]
+    }
+  ]
+}

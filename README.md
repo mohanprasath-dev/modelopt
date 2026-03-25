@@ -1,36 +1,72 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# ModelOpt
 
-## Getting Started
+AI Model Optimization Engine that recommends local AI models based on hardware constraints and use cases.
 
-First, run the development server:
+## Stack
+
+- Next.js 14 (App Router)
+- TypeScript
+- Tailwind CSS
+- shadcn/ui (button, card, select, slider, badge, tabs)
+
+## Project Structure
+
+```text
+app/
+components/
+	ui/
+lib/
+	data/
+		models.json
+		gpus.json
+	utils/
+		index.ts
+		modelFilter.ts
+public/
+```
+
+## Setup
+
+1. Install dependencies:
+
+```bash
+npm install
+```
+
+2. Configure environment variables:
+
+```bash
+copy .env.example .env.local
+```
+
+3. Start development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+4. Open `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- `npm run dev` - Run local development server
+- `npm run build` - Create production build
+- `npm run start` - Start production server
+- `npm run lint` - Run lint checks
 
-## Learn More
+## Data Notes
 
-To learn more about Next.js, take a look at the following resources:
+- `lib/data/models.json` includes 20+ curated models with practical hardware requirements, quantization options, and conservative throughput estimates.
+- `lib/data/gpus.json` includes normalized NVIDIA, AMD, and Apple Silicon hardware profiles.
+- For JSON compatibility, citations are stored as `sources` and `_meta.citation_comment` fields instead of inline comments.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Benchmark and Source References
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Primary references used in the dataset:
 
-## Deploy on Vercel
+- Ollama model library pages (sizes, context defaults, runtime tags)
+- Official model cards on Hugging Face
+- Vendor/model-launch technical posts (Meta, Mistral, Qwen, Google, Microsoft, Upstage)
+- Vendor hardware specification pages (NVIDIA, AMD, Apple)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+See per-model `sources` arrays inside `lib/data/models.json` and root `sources` in `lib/data/gpus.json`.

@@ -1,0 +1,40 @@
+{
+  "_meta": {
+    "citation_comment": "Specs compiled from official vendor specification sheets (NVIDIA, AMD, Apple) and normalized for model recommendation logic.",
+    "compute_score_comment": "Relative score baseline: RTX 4090 = 100 for local LLM throughput class performance."
+  },
+  "gpus": [
+    { "id": "rtx_4090", "display_name": "NVIDIA RTX 4090", "vram_gb": 24, "tier": "flagship", "compute_score": 100 },
+    { "id": "rtx_4080", "display_name": "NVIDIA RTX 4080", "vram_gb": 16, "tier": "high-end", "compute_score": 82 },
+    { "id": "rtx_4070_ti", "display_name": "NVIDIA RTX 4070 Ti", "vram_gb": 12, "tier": "high-end", "compute_score": 66 },
+    { "id": "rtx_4070", "display_name": "NVIDIA RTX 4070", "vram_gb": 12, "tier": "upper-mid", "compute_score": 58 },
+    { "id": "rtx_4060_ti_16gb", "display_name": "NVIDIA RTX 4060 Ti 16GB", "vram_gb": 16, "tier": "mid-range", "compute_score": 50 },
+    { "id": "rtx_4060_ti_8gb", "display_name": "NVIDIA RTX 4060 Ti 8GB", "vram_gb": 8, "tier": "mid-range", "compute_score": 48 },
+    { "id": "rtx_4060", "display_name": "NVIDIA RTX 4060", "vram_gb": 8, "tier": "mid-range", "compute_score": 42 },
+    { "id": "rtx_3090", "display_name": "NVIDIA RTX 3090", "vram_gb": 24, "tier": "enthusiast", "compute_score": 72 },
+    { "id": "rtx_3080_10gb", "display_name": "NVIDIA RTX 3080 10GB", "vram_gb": 10, "tier": "upper-mid", "compute_score": 57 },
+    { "id": "rtx_3080_12gb", "display_name": "NVIDIA RTX 3080 12GB", "vram_gb": 12, "tier": "upper-mid", "compute_score": 60 },
+    { "id": "rtx_3070", "display_name": "NVIDIA RTX 3070", "vram_gb": 8, "tier": "mid-range", "compute_score": 45 },
+    { "id": "rtx_3060", "display_name": "NVIDIA RTX 3060", "vram_gb": 12, "tier": "budget", "compute_score": 34 },
+
+    { "id": "rx_7900_xtx", "display_name": "AMD RX 7900 XTX", "vram_gb": 24, "tier": "flagship", "compute_score": 78 },
+    { "id": "rx_7900_xt", "display_name": "AMD RX 7900 XT", "vram_gb": 20, "tier": "high-end", "compute_score": 69 },
+    { "id": "rx_6800_xt", "display_name": "AMD RX 6800 XT", "vram_gb": 16, "tier": "upper-mid", "compute_score": 50 },
+
+    { "id": "apple_m1", "display_name": "Apple M1", "vram_gb": 8, "tier": "integrated", "compute_score": 20, "memory_type": "unified" },
+    { "id": "apple_m2", "display_name": "Apple M2", "vram_gb": 8, "tier": "integrated", "compute_score": 24, "memory_type": "unified" },
+    { "id": "apple_m3", "display_name": "Apple M3", "vram_gb": 8, "tier": "integrated", "compute_score": 29, "memory_type": "unified" },
+    { "id": "apple_m1_pro", "display_name": "Apple M1 Pro", "vram_gb": 16, "tier": "pro", "compute_score": 30, "memory_type": "unified" },
+    { "id": "apple_m2_pro", "display_name": "Apple M2 Pro", "vram_gb": 16, "tier": "pro", "compute_score": 36, "memory_type": "unified" },
+    { "id": "apple_m3_pro", "display_name": "Apple M3 Pro", "vram_gb": 18, "tier": "pro", "compute_score": 42, "memory_type": "unified" },
+    { "id": "apple_m1_max", "display_name": "Apple M1 Max", "vram_gb": 32, "tier": "max", "compute_score": 44, "memory_type": "unified" },
+    { "id": "apple_m2_max", "display_name": "Apple M2 Max", "vram_gb": 32, "tier": "max", "compute_score": 52, "memory_type": "unified" },
+    { "id": "apple_m3_max", "display_name": "Apple M3 Max", "vram_gb": 36, "tier": "max", "compute_score": 61, "memory_type": "unified" }
+  ],
+  "sources": [
+    "https://www.nvidia.com/en-us/geforce/graphics-cards/40-series/",
+    "https://www.nvidia.com/en-us/geforce/graphics-cards/30-series/",
+    "https://www.amd.com/en/products/graphics/desktops/radeon.html",
+    "https://www.apple.com/mac/"
+  ]
+}
