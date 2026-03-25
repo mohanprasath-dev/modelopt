@@ -47,7 +47,7 @@ cp .env.example .env.local
 pnpm dev
 ```
 
-Open http://localhost:3000 in your browser.
+Open <http://localhost:3000> in your browser.
 
 ## Available Scripts
 
@@ -71,21 +71,21 @@ npm run lint
 
 ```text
 app/
-	api/optimize/route.ts        # Optimization API (validation, ranking, Gemini)
-	app/page.tsx                 # Optimization dashboard form
-	results/page.tsx             # Results dashboard
-	page.tsx                     # Marketing landing page
+  api/optimize/route.ts        # Optimization API (validation, ranking, Gemini)
+  app/page.tsx                 # Optimization dashboard form
+  results/page.tsx             # Results dashboard
+  page.tsx                     # Marketing landing page
 
 components/
-	results/                     # Results page UI blocks
-	ui/                          # ShadCN primitives
+  results/                     # Results page UI blocks
+  ui/                          # ShadCN primitives
 
 lib/
-	data/
-		models.json               # Curated AI model catalog
-		gpus.json                 # Normalized GPU catalog
-	utils/
-		modelFilter.ts            # Hardware filtering helpers
+  data/
+    models.json               # Curated AI model catalog
+    gpus.json                 # Normalized GPU catalog
+  utils/
+    modelFilter.ts            # Hardware filtering helpers
 
 DEPLOYMENT.md                  # Deployment runbook
 ```
@@ -109,12 +109,12 @@ Request payload:
 
 ```json
 {
-	"gpu": "rtx_4090",
-	"ram_gb": 16,
-	"vram_gb": 24,
-	"use_cases": ["coding", "chat"],
-	"speed_preference": 3,
-	"deployment": "local"
+  "gpu": "rtx_4090",
+  "ram_gb": 16,
+  "vram_gb": 24,
+  "use_cases": ["coding", "chat"],
+  "speed_preference": 3,
+  "deployment": "local"
 }
 ```
 

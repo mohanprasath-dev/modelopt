@@ -39,7 +39,7 @@ export function ModelRecommendationCard({ data, index }: ModelRecommendationCard
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.08, duration: 0.45 }}
       whileHover={{ y: -4 }}
-      className="rounded-2xl border border-slate-800 bg-slate-900/60 p-5 shadow-[0_0_0_1px_rgba(30,41,59,0.7)] backdrop-blur-md transition-shadow hover:shadow-[0_0_30px_rgba(59,130,246,0.22)]"
+      className="flex h-full flex-col rounded-2xl border border-slate-800 bg-slate-900/60 p-5 shadow-[0_0_0_1px_rgba(30,41,59,0.7)] backdrop-blur-md transition-shadow hover:shadow-[0_0_30px_rgba(59,130,246,0.22)]"
     >
       <div className="mb-4 flex items-center justify-between gap-3">
         <Badge className={badgeStyle[data.slot]}>{data.slot}</Badge>
@@ -64,7 +64,7 @@ export function ModelRecommendationCard({ data, index }: ModelRecommendationCard
         </div>
       </div>
 
-      <div className="mt-4">
+      <div className="mt-4 flex-1">
         <InstallCommandsTabs
           ollamaCommand={data.ollama_install}
           llamaCppCommand={data.llama_cpp}

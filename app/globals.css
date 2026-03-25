@@ -95,14 +95,31 @@
     --sidebar-border: oklch(1 0 0 / 10%);
     --sidebar-ring: oklch(0.556 0 0);
   }
+  :root,
+  .dark {
+    color-scheme: dark;
+  }
   * {
-    border-color: var(--border);
+    @apply border-border;
   }
   body {
-    background: var(--background);
-    color: var(--foreground);
+    @apply bg-background text-foreground;
+    min-height: 100vh;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
   }
   html {
     @apply font-sans;
+    overflow-x: hidden;
+  }
+  pre,
+  code {
+    word-break: break-word;
+  }
+  img,
+  svg,
+  video,
+  canvas {
+    max-width: 100%;
   }
 }

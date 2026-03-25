@@ -364,7 +364,7 @@ export default function ResultsPage() {
                 },
               },
             }}
-            className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3"
+            className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
           >
             {cards.map((card, index) => {
               const active = selectedCompare.includes(card.name)
@@ -424,7 +424,7 @@ export default function ResultsPage() {
           maxSelections={4}
         />
 
-        <section className="sticky bottom-4 rounded-2xl border border-slate-800 bg-slate-900/90 p-4 backdrop-blur-sm">
+        <section className="sticky bottom-2 rounded-2xl border border-slate-800 bg-slate-900/90 p-4 pb-[max(1rem,env(safe-area-inset-bottom))] backdrop-blur-sm print:hidden">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <p className="text-sm text-slate-400">Actions</p>
             <div className="flex flex-wrap gap-2">

@@ -41,7 +41,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={cn("font-sans", inter.variable, jetBrainsMono.variable)}>
+    <html lang="en" className={cn("dark font-sans", inter.variable, jetBrainsMono.variable)}>
       <body className={cn("min-h-screen bg-slate-950", inter.className)}>
         <a
           href="#main-content"

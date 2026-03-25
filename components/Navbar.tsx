@@ -25,6 +25,18 @@ export function Navbar() {
     setOpen(false)
   }, [pathname])
 
+  React.useEffect(() => {
+    if (!open) {
+      document.body.style.overflow = ""
+      return
+    }
+
+    document.body.style.overflow = "hidden"
+    return () => {
+      document.body.style.overflow = ""
+    }
+  }, [open])
+
   return (
     <header className="sticky top-0 z-40 border-b border-slate-800/70 bg-slate-950/70 backdrop-blur-xl">
       <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-4 sm:px-6">
@@ -81,7 +93,7 @@ export function Navbar() {
       </div>
 
       {open ? (
-        <div className="border-t border-slate-800/70 bg-slate-900/95 px-4 py-4 md:hidden">
+        <div className="fixed inset-x-0 top-16 z-50 border-t border-slate-800/70 bg-slate-900/95 px-4 py-4 pb-6 shadow-2xl backdrop-blur-xl md:hidden">
           <nav className="flex flex-col gap-2" aria-label="Mobile">
             {navItems.map((item) => {
               const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`)
@@ -90,7 +102,7 @@ export function Navbar() {
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    "rounded-md px-3 py-2 text-sm text-slate-300",
+                    "rounded-md px-3 py-3 text-sm text-slate-300",
                     isActive && "bg-slate-800 text-slate-100"
                   )}
                 >

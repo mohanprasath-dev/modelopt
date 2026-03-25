@@ -50,7 +50,7 @@ Copy-Item .env.example .env.local
 3. Framework preset should auto-detect as Next.js.
 4. Add environment variables:
    - GEMINI_API_KEY
-   - NEXT_PUBLIC_APP_URL (for example, https://your-app.vercel.app)
+   - NEXT_PUBLIC_APP_URL (for example, <https://your-app.vercel.app>)
 5. Click Deploy.
 
 ### Option B: Vercel CLI
@@ -122,26 +122,32 @@ After deployment:
 ### 1) Missing GEMINI_API_KEY
 
 Symptoms:
+
 - /api/optimize returns 500 with provider error details.
 
 Fix:
+
 - Add GEMINI_API_KEY in Vercel project settings and redeploy.
 
 ### 2) No results page data
 
 Symptoms:
+
 - /results redirects or shows empty state.
 
 Fix:
+
 - Complete optimization flow through /app.
 - Ensure browser sessionStorage is enabled.
 
 ### 3) Unexpected 429 responses
 
 Symptoms:
+
 - Frequent rate-limit errors during testing.
 
 Fix:
+
 - Wait for limit reset (1 minute).
 - Use staggered test requests.
 - Move to shared Redis limiter for multi-instance production behavior.

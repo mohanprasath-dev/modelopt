@@ -79,6 +79,8 @@ export function OptimizationForm({ initialValues, onProgressChange, onDraftChang
   const router = useRouter()
   const [submitError, setSubmitError] = React.useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = React.useState(false)
+  const vramErrorId = React.useId()
+  const submitErrorId = React.useId()
 
   const mergedDefaults = React.useMemo(
     () => ({
@@ -244,11 +246,12 @@ export function OptimizationForm({ initialValues, onProgressChange, onDraftChang
                 name={field.name}
                 className="h-11 rounded-xl border-slate-700 bg-slate-900 text-slate-100"
                 aria-invalid={errors.vram_gb ? "true" : "false"}
+                aria-describedby={errors.vram_gb?.message ? vramErrorId : undefined}
               />
             )}
           />
           <p className="text-xs text-slate-500">Leave auto-filled unless you know better.</p>
-          {errors.vram_gb?.message ? <p className="text-sm text-red-400">{errors.vram_gb.message}</p> : null}
+          {errors.vram_gb?.message ? <p id={vramErrorId} className="text-sm text-red-400">{errors.vram_gb.message}</p> : null}
         </div>
 
         <Controller
@@ -288,7 +291,7 @@ export function OptimizationForm({ initialValues, onProgressChange, onDraftChang
 
         {submitError ? (
           <div className="rounded-xl border border-red-500/40 bg-red-500/10 p-4">
-            <p className="text-sm text-red-200">{submitError}</p>
+            <p id={submitErrorId} className="text-sm text-red-200">{submitError}</p>
             <Button
               type="button"
               variant="outline"
@@ -301,21 +304,24 @@ export function OptimizationForm({ initialValues, onProgressChange, onDraftChang
           </div>
         ) : null}
 
-        <Button
-          type="submit"
-          size="lg"
-          className="h-12 w-full rounded-xl bg-blue-500 text-base font-semibold text-white shadow-[0_0_30px_rgba(59,130,246,0.35)] hover:bg-blue-400 disabled:cursor-not-allowed disabled:opacity-50"
-          disabled={!isValid || isSubmitting}
-        >
-          {isSubmitting ? (
-            <>
-              <Loader2 className="mr-2 size-4 animate-spin" />
-              Finding Models...
-            </>
-          ) : (
-            "Find My Models"
-          )}
-        </Button>
+        <div className="sticky bottom-3 z-10 -mx-1 rounded-xl border border-slate-700/70 bg-slate-950/80 p-2 backdrop-blur sm:static sm:mx-0 sm:border-0 sm:bg-transparent sm:p-0">
+          <Button
+            type="submit"
+            size="lg"
+            className="h-12 w-full rounded-xl bg-blue-500 text-base font-semibold text-white shadow-[0_0_30px_rgba(59,130,246,0.35)] hover:bg-blue-400 disabled:cursor-not-allowed disabled:opacity-50"
+            disabled={!isValid || isSubmitting}
+            aria-describedby={submitError ? submitErrorId : undefined}
+          >
+            {isSubmitting ? (
+              <>
+                <Loader2 className="mr-2 size-4 animate-spin" />
+                Finding Models...
+              </>
+            ) : (
+              "Find My Models"
+            )}
+          </Button>
+        </div>
       </form>
     </div>
   )

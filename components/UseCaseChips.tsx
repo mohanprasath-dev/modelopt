@@ -31,7 +31,7 @@ export function UseCaseChips({ value, onChange, error }: UseCaseChipsProps) {
   return (
     <div className="space-y-2">
       <p className="text-sm font-medium text-slate-200">Use Cases</p>
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3" role="group" aria-label="Select one or more use cases">
+      <div className="flex flex-wrap gap-2" role="group" aria-label="Select one or more use cases">
         {USE_CASES.map((useCase) => {
           const active = value.includes(useCase)
 
@@ -41,7 +41,7 @@ export function UseCaseChips({ value, onChange, error }: UseCaseChipsProps) {
               type="button"
               onClick={() => toggle(useCase)}
               className={cn(
-                "rounded-xl border border-slate-700 bg-slate-900/70 px-3 py-2 text-sm capitalize text-slate-200 transition-all hover:border-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400",
+                "min-h-11 min-w-[140px] rounded-xl border border-slate-700 bg-slate-900/70 px-3 py-2 text-sm capitalize text-slate-200 transition-all hover:border-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400",
                 active && "border-blue-500/70 bg-blue-500/15 text-blue-200 shadow-[0_0_22px_rgba(59,130,246,0.3)]"
               )}
               aria-pressed={active}

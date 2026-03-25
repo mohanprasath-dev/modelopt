@@ -27,7 +27,7 @@ export function Footer() {
 
   return (
     <footer className="mt-16 border-t border-slate-800/90 bg-slate-950/80 px-4 py-12" aria-label="Site footer">
-      <div className="mx-auto grid w-full max-w-7xl gap-8 md:grid-cols-2 lg:grid-cols-4">
+      <div className="mx-auto grid w-full max-w-7xl gap-8 sm:grid-cols-2 lg:grid-cols-4">
         <section>
           <h3 className="text-lg font-semibold text-slate-100">ModelOpt</h3>
           <p className="mt-2 text-sm text-slate-400">AI Model Optimization Made Simple</p>
@@ -35,7 +35,7 @@ export function Footer() {
             <label htmlFor="newsletter-email" className="text-xs text-slate-400">
               Get updates on new models
             </label>
-            <div className="flex gap-2">
+            <div className="flex flex-col gap-2 sm:flex-row">
               <Input
                 id="newsletter-email"
                 type="email"
@@ -44,7 +44,7 @@ export function Footer() {
                 placeholder="you@example.com"
                 className="h-10 border-slate-700 bg-slate-900 text-slate-100"
               />
-              <Button type="submit" className="bg-blue-500 text-white hover:bg-blue-400">
+              <Button type="submit" className="min-h-11 bg-blue-500 text-white hover:bg-blue-400">
                 Join
               </Button>
             </div>
@@ -84,7 +84,7 @@ export function Footer() {
 
       <div className="mx-auto mt-10 flex w-full max-w-7xl flex-col items-start justify-between gap-4 border-t border-slate-800 pt-6 text-sm text-slate-400 sm:flex-row sm:items-center">
         <p>Built by Mohan Prasath</p>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           <Link href="https://linkedin.com/in/mohanprasath21" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
             <span className="text-xs uppercase tracking-wide">LinkedIn</span>
           </Link>

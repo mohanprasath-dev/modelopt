@@ -38,6 +38,7 @@ function getManufacturer(displayName: string): (typeof groupOrder)[number] {
 export function GpuSelector({ gpus, value, onChange, error }: GpuSelectorProps) {
   const [open, setOpen] = React.useState(false)
   const listboxId = React.useId()
+  const errorId = React.useId()
 
   const selectedGpu = gpus.find((gpu) => gpu.id === value)
 
@@ -71,6 +72,8 @@ export function GpuSelector({ gpus, value, onChange, error }: GpuSelectorProps) 
               aria-expanded={open}
               aria-controls={listboxId}
               aria-label="Select GPU"
+              aria-invalid={Boolean(error)}
+              aria-describedby={error ? errorId : undefined}
               className={cn(
                 "inline-flex h-11 w-full items-center justify-between rounded-xl border border-slate-700 bg-slate-900 px-3 text-sm text-slate-100 transition-colors hover:bg-slate-800",
                 error && "border-red-500/70"
@@ -111,7 +114,7 @@ export function GpuSelector({ gpus, value, onChange, error }: GpuSelectorProps) 
           </Command>
         </PopoverContent>
       </Popover>
-      {error ? <p className="text-sm text-red-400">{error}</p> : null}
+      {error ? <p id={errorId} className="text-sm text-red-400">{error}</p> : null}
     </div>
   )
 }
