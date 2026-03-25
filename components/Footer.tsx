@@ -1,21 +1,99 @@
+"use client"
+
+import * as React from "react"
 import Link from "next/link"
+import { GitHub, Globe, Linkedin } from "lucide-react"
+
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 
 export function Footer() {
+  const [email, setEmail] = React.useState("")
+  const [subscribed, setSubscribed] = React.useState(false)
+
+  const subscribe = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    if (!email.trim()) {
+      return
+    }
+
+    const existing = localStorage.getItem("modelopt_newsletter")
+    const list = existing ? (JSON.parse(existing) as string[]) : []
+    const nextList = Array.from(new Set([...list, email.trim().toLowerCase()]))
+    localStorage.setItem("modelopt_newsletter", JSON.stringify(nextList))
+    setSubscribed(true)
+    setEmail("")
+  }
+
   return (
-    <footer className="border-t border-slate-800/90 px-8 py-10" aria-label="Site footer">
-      <div className="mx-auto flex w-full max-w-6xl flex-col items-start justify-between gap-3 text-sm text-slate-400 sm:flex-row sm:items-center">
+    <footer className="mt-16 border-t border-slate-800/90 bg-slate-950/80 px-4 py-12" aria-label="Site footer">
+      <div className="mx-auto grid w-full max-w-7xl gap-8 md:grid-cols-2 lg:grid-cols-4">
+        <section>
+          <h3 className="text-lg font-semibold text-slate-100">ModelOpt</h3>
+          <p className="mt-2 text-sm text-slate-400">AI Model Optimization Made Simple</p>
+          <form className="mt-4 space-y-2" onSubmit={subscribe}>
+            <label htmlFor="newsletter-email" className="text-xs text-slate-400">
+              Get updates on new models
+            </label>
+            <div className="flex gap-2">
+              <Input
+                id="newsletter-email"
+                type="email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                placeholder="you@example.com"
+                className="h-10 border-slate-700 bg-slate-900 text-slate-100"
+              />
+              <Button type="submit" className="bg-blue-500 text-white hover:bg-blue-400">
+                Join
+              </Button>
+            </div>
+            {subscribed ? <p className="text-xs text-emerald-300">Thanks! We will notify you of updates.</p> : null}
+          </form>
+        </section>
+
+        <section>
+          <h4 className="font-medium text-slate-100">Product</h4>
+          <ul className="mt-3 space-y-2 text-sm text-slate-400">
+            <li><Link href="/app" className="hover:text-slate-100">Optimizer</Link></li>
+            <li><Link href="/docs" className="hover:text-slate-100">Docs</Link></li>
+            <li><Link href="/pricing" className="hover:text-slate-100">Pricing</Link></li>
+            <li><Link href="/about" className="hover:text-slate-100">About</Link></li>
+          </ul>
+        </section>
+
+        <section>
+          <h4 className="font-medium text-slate-100">Resources</h4>
+          <ul className="mt-3 space-y-2 text-sm text-slate-400">
+            <li><Link href="/blog" className="hover:text-slate-100">Blog</Link></li>
+            <li><Link href="/changelog" className="hover:text-slate-100">Changelog</Link></li>
+            <li><Link href="/contact" className="hover:text-slate-100">Contact</Link></li>
+            <li><Link href="https://github.com/mohanprasath-dev/modelopt" target="_blank" rel="noopener noreferrer" className="hover:text-slate-100">GitHub</Link></li>
+          </ul>
+        </section>
+
+        <section>
+          <h4 className="font-medium text-slate-100">Legal</h4>
+          <ul className="mt-3 space-y-2 text-sm text-slate-400">
+            <li><Link href="/privacy" className="hover:text-slate-100">Privacy</Link></li>
+            <li><Link href="/terms" className="hover:text-slate-100">Terms</Link></li>
+            <li><Link href="/cookies" className="hover:text-slate-100">Cookies</Link></li>
+          </ul>
+        </section>
+      </div>
+
+      <div className="mx-auto mt-10 flex w-full max-w-7xl flex-col items-start justify-between gap-4 border-t border-slate-800 pt-6 text-sm text-slate-400 sm:flex-row sm:items-center">
         <p>Built by Mohan Prasath</p>
-        <div className="flex items-center gap-5">
-          <Link
-            href="https://github.com/mohanprasath-dev/modelopt"
-            className="underline-offset-4 transition-colors hover:text-slate-200 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Open ModelOpt GitHub repository"
-          >
-            GitHub
+        <div className="flex items-center gap-3">
+          <Link href="https://linkedin.com/in/mohanprasath21" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+            <Linkedin className="size-4" />
           </Link>
-          <p>Powered by Gemini AI + Ollama</p>
+          <Link href="https://github.com/mohanprasath-dev" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+            <GitHub className="size-4" />
+          </Link>
+          <Link href="https://mohanprasath.dev" target="_blank" rel="noopener noreferrer" aria-label="Website">
+            <Globe className="size-4" />
+          </Link>
         </div>
       </div>
     </footer>
