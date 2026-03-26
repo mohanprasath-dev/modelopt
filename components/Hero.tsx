@@ -57,17 +57,10 @@ export function Hero() {
             className="text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl"
           >
             <SplitText
-              text="Find Your Perfect"
+              text="Find Your Perfect AI Model"
               className="block text-slate-100"
               stagger={0.05}
               duration={0.5}
-            />
-            <SplitText
-              text="AI Model"
-              className="mt-1 block gradient-text"
-              delay={0.3}
-              stagger={0.08}
-              duration={0.6}
             />
           </h1>
 
