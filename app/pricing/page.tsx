@@ -10,6 +10,15 @@ import { FAQ } from "@/components/FAQ"
 export const metadata: Metadata = {
   title: "Pricing — ModelOpt",
   description: "ModelOpt pricing: free optimization for everyone, Pro and Enterprise coming soon.",
+  alternates: {
+    canonical: "/pricing",
+  },
+  openGraph: {
+    title: "ModelOpt Pricing",
+    description: "Explore ModelOpt plans for AI model optimization workflows.",
+    url: "/pricing",
+    type: "website",
+  },
 }
 
 const tiers = [

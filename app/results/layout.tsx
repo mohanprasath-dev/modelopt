@@ -5,6 +5,10 @@ const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"
 export const metadata: Metadata = {
   title: "Optimization Results",
   description: "Review recommendations, compare models, and share URL-synced result states.",
+  robots: {
+    index: false,
+    follow: false,
+  },
   alternates: {
     canonical: `${siteUrl}/results`,
   },

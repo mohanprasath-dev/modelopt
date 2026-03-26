@@ -27,6 +27,15 @@ import { SpotlightCard } from "@/components/ui/spotlight-card"
 export const metadata: Metadata = {
   title: "About — ModelOpt",
   description: "Mission, architecture, and creator profile for ModelOpt.",
+  alternates: {
+    canonical: "/about",
+  },
+  openGraph: {
+    title: "About ModelOpt",
+    description: "Learn how ModelOpt recommends AI models with transparent reasoning.",
+    url: "/about",
+    type: "website",
+  },
 }
 
 const techStack = [

@@ -1,3 +1,20 @@
+import type { Metadata } from "next"
+import Link from "next/link"
+
+export const metadata: Metadata = {
+  title: "ModelOpt Changelog",
+  description: "Product updates, releases, and SEO/performance improvements shipped in ModelOpt.",
+  alternates: {
+    canonical: "/changelog",
+  },
+  openGraph: {
+    title: "ModelOpt Changelog",
+    description: "Track all major ModelOpt updates and release highlights.",
+    url: "/changelog",
+    type: "article",
+  },
+}
+
 export default function ChangelogPage() {
   return (
     <main className="px-4 py-12 text-slate-100 sm:px-6">
@@ -10,6 +27,9 @@ export default function ChangelogPage() {
             <p><strong>Improved:</strong> Mobile responsiveness, error handling, API fallback reliability.</p>
           </div>
         </section>
+        <p className="text-sm text-slate-400">
+          Start with <Link href="/docs/getting-started" className="text-blue-300">documentation</Link> or run your first <Link href="/app" className="text-blue-300">model optimization</Link>.
+        </p>
       </div>
     </main>
   )

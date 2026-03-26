@@ -140,6 +140,7 @@ export function Hero() {
           {...fadeUp}
           transition={{ ...fadeUp.transition, delay: 0.15 }}
           className="relative"
+          id="demo"
         >
           {/* Glow ring behind card */}
           <div className="absolute -inset-[1px] rounded-3xl bg-gradient-to-br from-blue-500/40 via-blue-400/10 to-transparent blur-sm" />

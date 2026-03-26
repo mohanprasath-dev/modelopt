@@ -1,4 +1,20 @@
+import type { Metadata } from "next"
 import modelsData from "@/lib/data/models.json"
+
+export const metadata: Metadata = {
+  title: "AI Model Comparison Tool",
+  description:
+    "Compare AI models side by side by VRAM, context window, size, and use-case fit to choose the best model for your hardware.",
+  alternates: {
+    canonical: "/compare",
+  },
+  openGraph: {
+    title: "ModelOpt AI Model Comparison Tool",
+    description: "Side-by-side model comparison for faster AI stack decisions.",
+    url: "/compare",
+    type: "website",
+  },
+}
 
 interface ComparePageProps {
   searchParams?: {

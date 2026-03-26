@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
+import Script from "next/script"
 import { ArrowRight } from "lucide-react"
 
 import { Hero } from "@/components/Hero"
@@ -9,9 +10,50 @@ import { FAQ } from "@/components/FAQ"
 import { Button } from "@/components/ui/button"
 
 export const metadata: Metadata = {
-  title: "ModelOpt — AI Model Optimization Engine",
+  title: "AI Model Optimization Engine for Local LLMs",
   description:
-    "Hardware-optimized AI model recommendations in seconds. Find the perfect local LLM for your GPU, RAM, and use cases — powered by Gemini AI.",
+    "Find the best local LLM for your GPU and RAM in seconds. Compare models, optimize performance, and get deployment commands for Ollama, llama.cpp, and HuggingFace.",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "ModelOpt - AI Model Optimization Engine",
+    description:
+      "Hardware-optimized AI model recommendations with instant deployment commands.",
+    url: "/",
+    type: "website",
+  },
+}
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: "What is ModelOpt?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "ModelOpt is a free AI model recommendation engine that matches models to your GPU, RAM, and use cases.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "How accurate are recommendations?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Recommendations are hardware-aware and filtered by VRAM and RAM constraints, then ranked by use-case and speed preference.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Can I use ModelOpt without a high-end GPU?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Yes. ModelOpt supports multiple hardware tiers and recommends models that fit lower-memory systems as well.",
+      },
+    },
+  ],
 }
 
 const testimonials = [
@@ -42,6 +84,11 @@ const stats = [
 export default function Home() {
   return (
     <main className="bg-slate-950 text-slate-100">
+      <Script
+        id="schema-faq-home"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
       {/* Hero */}
       <Hero />
 
@@ -98,6 +145,16 @@ export default function Home() {
 
       {/* FAQ */}
       <FAQ />
+
+      {/* Internal links cluster */}
+      <section className="px-4 pb-8 sm:px-6" aria-label="Explore model optimization guides">
+        <div className="mx-auto flex w-full max-w-4xl flex-wrap justify-center gap-2 text-sm text-slate-400">
+          <Link href="/docs/getting-started" className="rounded-full border border-slate-700 px-3 py-1.5 hover:border-blue-500/40 hover:text-slate-200">Getting started with ModelOpt</Link>
+          <Link href="/docs/model-comparison" className="rounded-full border border-slate-700 px-3 py-1.5 hover:border-blue-500/40 hover:text-slate-200">Model comparison chart</Link>
+          <Link href="/blog/vram-vs-ram" className="rounded-full border border-slate-700 px-3 py-1.5 hover:border-blue-500/40 hover:text-slate-200">VRAM vs RAM guide</Link>
+          <Link href="/blog/quantization-explained" className="rounded-full border border-slate-700 px-3 py-1.5 hover:border-blue-500/40 hover:text-slate-200">Quantization guide</Link>
+        </div>
+      </section>
 
       {/* CTA Banner */}
       <section className="px-4 py-20 sm:px-6">

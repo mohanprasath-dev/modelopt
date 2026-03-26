@@ -1,8 +1,18 @@
 import type { Metadata } from "next"
+import Link from "next/link"
 
 export const metadata: Metadata = {
   title: "Cookie Policy",
-  description: "ModelOpt cookie policy",
+  description: "Understand how ModelOpt uses browser storage and cookies for core functionality.",
+  alternates: {
+    canonical: "/cookies",
+  },
+  openGraph: {
+    title: "ModelOpt Cookie Policy",
+    description: "Cookie and browser storage usage policy for ModelOpt.",
+    url: "/cookies",
+    type: "website",
+  },
 }
 
 export default function CookiesPage() {
@@ -13,6 +23,7 @@ export default function CookiesPage() {
         <p className="text-sm text-slate-400">Last updated: March 2026</p>
         <p className="text-slate-300">ModelOpt uses essential browser storage for session flows (for example, optimization result persistence).</p>
         <p className="text-slate-300">Future analytics integrations will remain privacy-focused and aggregate-only.</p>
+        <p className="text-slate-300">Read more in our <Link href="/privacy" className="text-blue-300">privacy policy</Link>.</p>
       </article>
     </main>
   )
