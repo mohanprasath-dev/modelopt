@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 
-const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"
+const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://modelopt.mohanprasath.dev"
 
 export const metadata: Metadata = {
   title: "Docs - Model Comparison",

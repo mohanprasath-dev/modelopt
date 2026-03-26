@@ -10,7 +10,7 @@ import { Breadcrumb } from "@/components/Breadcrumb";
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 const jetBrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono" });
 
-const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"
+const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://modelopt.mohanprasath.dev"
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
