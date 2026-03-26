@@ -169,10 +169,24 @@ export function OptimizationForm({ initialValues, onProgressChange, onDraftChang
 
       if (!response.ok) {
         const payload = (await response.json().catch(() => null)) as
-          | { error?: string }
+          | {
+              error?: string
+              details?: {
+                formErrors?: string[]
+                fieldErrors?: Record<string, string[] | undefined>
+              }
+            }
           | null
 
-        throw new Error(payload?.error ?? "Unable to optimize your setup right now.")
+        const firstFieldError = payload?.details?.fieldErrors
+          ? Object.values(payload.details.fieldErrors)
+              .flat()
+              .find((message): message is string => Boolean(message))
+          : null
+
+        const detailedMessage = payload?.details?.formErrors?.[0] ?? firstFieldError
+
+        throw new Error(detailedMessage ?? payload?.error ?? "Unable to optimize your setup right now.")
       }
 
       const payload = (await response.json()) as unknown

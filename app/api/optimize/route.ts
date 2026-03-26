@@ -34,18 +34,15 @@ interface ModelSpec {
 const gpuList = gpusData.gpus as GpuSpec[]
 const modelList = modelsData.models as ModelSpec[]
 
-const RAM_ALLOWED_VALUES = [8, 16, 32, 64, 128] as const
-
 const payloadSchema = z.object({
   gpu: z.string().min(1, "GPU is required."),
   ram_gb: z
     .number()
     .int()
-    .refine((value) => RAM_ALLOWED_VALUES.includes(value as (typeof RAM_ALLOWED_VALUES)[number]), {
-      message: "RAM must be one of 8, 16, 32, 64, 128.",
-    }),
+    .min(8, "RAM must be at least 8GB.")
+    .max(1024, "RAM value is too large."),
   vram_gb: z.number().int().positive().optional(),
-  use_cases: z.array(z.string().min(1)).min(1).max(5),
+  use_cases: z.array(z.string().min(1)).min(1).max(7),
   speed_preference: z.number().int().min(1).max(5),
   deployment: z.enum(["local", "cloud"]),
 })
@@ -97,21 +94,13 @@ function isSameOrigin(request: Request): boolean {
     return true
   }
 
-  const host = request.headers.get("x-forwarded-host") ?? request.headers.get("host")
-  const proto = request.headers.get("x-forwarded-proto") ?? "https"
-  if (!host) {
-    return false
-  }
-
-  const expectedOrigin = `${proto}://${host}`
+  const expectedOrigin = new URL(request.url).origin
   return origin === expectedOrigin
 }
 
 function corsHeaders(request: Request): HeadersInit {
   const origin = request.headers.get("origin")
-  const host = request.headers.get("x-forwarded-host") ?? request.headers.get("host")
-  const proto = request.headers.get("x-forwarded-proto") ?? "https"
-  const expectedOrigin = host ? `${proto}://${host}` : ""
+  const expectedOrigin = new URL(request.url).origin
   const allowOrigin = origin && origin === expectedOrigin ? origin : expectedOrigin || "null"
 
   return {
