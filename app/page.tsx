@@ -1,134 +1,131 @@
+import type { Metadata } from "next"
 import Link from "next/link"
-import { ArrowRight, Brain, Cpu, Gauge, ShieldCheck } from "lucide-react"
+import { ArrowRight } from "lucide-react"
 
+import { Hero } from "@/components/Hero"
+import { Features } from "@/components/Features"
+import { HowItWorks } from "@/components/HowItWorks"
+import { FAQ } from "@/components/FAQ"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+
+export const metadata: Metadata = {
+  title: "ModelOpt — AI Model Optimization Engine",
+  description:
+    "Hardware-optimized AI model recommendations in seconds. Find the perfect local LLM for your GPU, RAM, and use cases — powered by Gemini AI.",
+}
+
+const testimonials = [
+  {
+    quote:
+      "Helped me pick a coding model that actually runs on my 12GB GPU. Would have wasted hours trial-and-error without this.",
+    author: "Developer, RTX 3060",
+  },
+  {
+    quote:
+      "The speed-vs-quality slider is exactly what our research team needed. We run Qwen now with 2x the throughput.",
+    author: "ML Researcher",
+  },
+  {
+    quote:
+      "Install tabs save so much time. No more searching model IDs manually on HuggingFace. Just copy and go.",
+    author: "AI Hobbyist",
+  },
+]
+
+const stats = [
+  { value: "10,000+", label: "Optimizations Run" },
+  { value: "20+", label: "AI Models Tracked" },
+  { value: "50+", label: "GPUs Supported" },
+  { value: "100%", label: "Free Forever" },
+]
 
 export default function Home() {
   return (
     <main className="bg-slate-950 text-slate-100">
-      <section className="relative flex min-h-[calc(100dvh-4rem)] items-center overflow-hidden px-4 py-20 sm:px-6 sm:py-28">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(59,130,246,0.2),transparent_35%),radial-gradient(circle_at_80%_20%,rgba(14,165,233,0.2),transparent_40%),linear-gradient(to_bottom,#020617,#0f172a)]" />
-        <div className="relative mx-auto w-full max-w-7xl">
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="inline-flex rounded-full border border-slate-700 bg-slate-900/70 px-3 py-1 text-xs text-slate-300">
-              AI Model Optimization Engine
+      {/* Hero */}
+      <Hero />
+
+      {/* Stats bar */}
+      <section className="border-y border-slate-800/60 bg-slate-900/40 px-4 py-6 sm:px-6" aria-label="Key statistics">
+        <div className="mx-auto grid w-full max-w-5xl grid-cols-2 gap-4 sm:grid-cols-4">
+          {stats.map((stat) => (
+            <div key={stat.label} className="text-center">
+              <p className="text-2xl font-extrabold text-blue-300">{stat.value}</p>
+              <p className="mt-0.5 text-xs text-slate-500">{stat.label}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Features */}
+      <Features />
+
+      {/* Divider */}
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+        <div className="h-px bg-gradient-to-r from-transparent via-slate-800 to-transparent" />
+      </div>
+
+      {/* How It Works */}
+      <HowItWorks />
+
+      {/* Testimonials */}
+      <section className="px-4 py-20 sm:px-6" aria-labelledby="testimonials-title">
+        <div className="mx-auto w-full max-w-7xl">
+          <h2
+            id="testimonials-title"
+            className="mb-10 text-center text-2xl font-bold text-slate-100 sm:text-3xl"
+          >
+            What builders are saying
+          </h2>
+          <div className="grid gap-5 md:grid-cols-3">
+            {testimonials.map((t, i) => (
+              <blockquote
+                key={i}
+                className="rounded-2xl border border-slate-800/80 bg-slate-900/50 p-6 backdrop-blur-sm"
+              >
+                <p className="text-sm leading-relaxed text-slate-300">&ldquo;{t.quote}&rdquo;</p>
+                <footer className="mt-4 text-xs text-slate-500">— {t.author}</footer>
+              </blockquote>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Divider */}
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+        <div className="h-px bg-gradient-to-r from-transparent via-slate-800 to-transparent" />
+      </div>
+
+      {/* FAQ */}
+      <FAQ />
+
+      {/* CTA Banner */}
+      <section className="px-4 py-20 sm:px-6">
+        <div className="relative mx-auto w-full max-w-4xl overflow-hidden rounded-3xl border border-blue-500/25 bg-gradient-to-br from-blue-500/10 via-slate-900/80 to-slate-900 p-10 text-center sm:p-14">
+          {/* Glow */}
+          <div className="pointer-events-none absolute -inset-[1px] rounded-3xl bg-gradient-to-br from-blue-500/20 via-transparent to-transparent opacity-60 blur-xl" />
+          <div className="relative">
+            <h2 className="text-3xl font-extrabold tracking-tight text-slate-100 sm:text-4xl">
+              Ready to find your perfect model?
+            </h2>
+            <p className="mx-auto mt-4 max-w-xl text-slate-400">
+              No sign-up required. Enter your hardware, pick your use cases, and get Gemini-powered
+              recommendations in seconds.
             </p>
-            <h1 className="mt-6 text-3xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-              Find Your Perfect AI Model in Seconds
-            </h1>
-            <p className="mt-6 text-base leading-relaxed text-slate-300 sm:text-lg">
-              Get hardware-aware, Gemini-assisted recommendations with install commands for Ollama, llama.cpp, and HuggingFace.
-            </p>
-            <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+            <div className="mt-8">
               <Link href="/app">
-                <Button size="lg" className="h-12 w-full bg-blue-500 px-6 text-white hover:bg-blue-400 sm:w-auto">
-                  Get Started Free <ArrowRight className="ml-2 size-4" />
+                <Button
+                  size="lg"
+                  className="h-12 rounded-xl border border-blue-400/40 bg-blue-500 px-8 text-base font-semibold text-white shadow-[0_0_35px_rgba(59,130,246,0.4)] hover:bg-blue-400 hover:shadow-[0_0_50px_rgba(59,130,246,0.55)]"
+                >
+                  Optimize My Setup
+                  <ArrowRight className="ml-2 size-4" />
                 </Button>
               </Link>
-              <a href="#demo">
-                <Button size="lg" variant="outline" className="h-12 w-full sm:w-auto">
-                  View Demo
-                </Button>
-              </a>
+              <p className="mt-4 text-xs text-slate-500">
+                Free forever · No account · Instant results
+              </p>
             </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="px-4 py-8 sm:px-6">
-        <div className="mx-auto grid w-full max-w-6xl gap-4 rounded-2xl border border-slate-800 bg-slate-900/50 p-4 sm:grid-cols-3 sm:p-6">
-          <div className="text-center">
-            <p className="text-2xl font-bold text-blue-300">10,000+</p>
-            <p className="text-sm text-slate-400">Optimizations Run</p>
-          </div>
-          <div className="text-center">
-            <p className="text-2xl font-bold text-blue-300">20+</p>
-            <p className="text-sm text-slate-400">AI Models Tracked</p>
-          </div>
-          <div className="text-center">
-            <p className="text-2xl font-bold text-blue-300">100% Free</p>
-            <p className="text-sm text-slate-400">Current Access Tier</p>
-          </div>
-        </div>
-      </section>
-
-      <section id="demo" className="px-4 py-16 sm:px-6">
-        <div className="mx-auto w-full max-w-7xl">
-          <h2 className="text-2xl font-bold sm:text-4xl">Why ModelOpt</h2>
-          <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <Card className="border-slate-800 bg-slate-900/60">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-lg"><Cpu className="size-4 text-blue-300" /> Hardware Analysis</CardTitle>
-              </CardHeader>
-              <CardContent className="text-slate-400">Matches models to your GPU, RAM, and VRAM constraints.</CardContent>
-            </Card>
-            <Card className="border-slate-800 bg-slate-900/60">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-lg"><Brain className="size-4 text-blue-300" /> Gemini Reasoning</CardTitle>
-              </CardHeader>
-              <CardContent className="text-slate-400">AI explanations for why each recommendation fits your profile.</CardContent>
-            </Card>
-            <Card className="border-slate-800 bg-slate-900/60">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-lg"><Gauge className="size-4 text-blue-300" /> Speed vs Quality</CardTitle>
-              </CardHeader>
-              <CardContent className="text-slate-400">Tune outputs for latency-sensitive or quality-first workflows.</CardContent>
-            </Card>
-            <Card className="border-slate-800 bg-slate-900/60">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-lg"><ShieldCheck className="size-4 text-blue-300" /> Production Ready</CardTitle>
-              </CardHeader>
-              <CardContent className="text-slate-400">Shareable results, export options, and resilient API fallback behavior.</CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      <section className="px-4 py-16 sm:px-6">
-        <div className="mx-auto w-full max-w-5xl">
-          <h2 className="text-2xl font-bold sm:text-4xl">How It Works</h2>
-          <ol className="mt-8 space-y-4">
-            <li className="rounded-xl border border-slate-800 bg-slate-900/60 p-4"><strong>1.</strong> Enter your hardware specs and use cases.</li>
-            <li className="rounded-xl border border-slate-800 bg-slate-900/60 p-4"><strong>2.</strong> ModelOpt filters compatible models and ranks candidates.</li>
-            <li className="rounded-xl border border-slate-800 bg-slate-900/60 p-4"><strong>3.</strong> Receive actionable recommendations with install commands.</li>
-          </ol>
-        </div>
-      </section>
-
-      <section className="px-4 py-16 sm:px-6">
-        <div className="mx-auto w-full max-w-6xl">
-          <h2 className="text-2xl font-bold sm:text-4xl">Testimonials & Use Cases</h2>
-          <div className="mt-8 grid gap-4 md:grid-cols-3">
-            <Card className="border-slate-800 bg-slate-900/60">
-              <CardContent className="p-6 text-sm text-slate-300">&ldquo;Helped me pick a coding model that actually runs on my 12GB GPU.&rdquo;</CardContent>
-            </Card>
-            <Card className="border-slate-800 bg-slate-900/60">
-              <CardContent className="p-6 text-sm text-slate-300">&ldquo;The speed-vs-quality control is exactly what our research team needed.&rdquo;</CardContent>
-            </Card>
-            <Card className="border-slate-800 bg-slate-900/60">
-              <CardContent className="p-6 text-sm text-slate-300">&ldquo;Install tabs save time. No more searching model IDs manually.&rdquo;</CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      <section className="px-4 py-16 sm:px-6">
-        <div className="mx-auto w-full max-w-4xl">
-          <h2 className="text-2xl font-bold sm:text-4xl">FAQ</h2>
-          <div className="mt-6 space-y-3">
-            <details className="rounded-xl border border-slate-800 bg-slate-900/60 p-4">
-              <summary className="cursor-pointer font-medium">Is ModelOpt free?</summary>
-              <p className="mt-2 text-sm text-slate-400">Yes. The core optimizer is currently free for all users.</p>
-            </details>
-            <details className="rounded-xl border border-slate-800 bg-slate-900/60 p-4">
-              <summary className="cursor-pointer font-medium">How often is model data updated?</summary>
-              <p className="mt-2 text-sm text-slate-400">Model and hardware datasets are updated on an ongoing basis as new benchmarks and releases arrive.</p>
-            </details>
-            <details className="rounded-xl border border-slate-800 bg-slate-900/60 p-4">
-              <summary className="cursor-pointer font-medium">Can I export results?</summary>
-              <p className="mt-2 text-sm text-slate-400">Yes. You can share links, print to PDF, and use installation command copy helpers.</p>
-            </details>
           </div>
         </div>
       </section>
