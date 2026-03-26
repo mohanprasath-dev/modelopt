@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation"
 import { Menu, X, Sparkles } from "lucide-react"
 import * as React from "react"
 import { motion, AnimatePresence } from "framer-motion"
+import { createPortal } from "react-dom"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -29,6 +30,11 @@ export function Navbar() {
   const pathname = usePathname()
   const [open, setOpen] = React.useState(false)
   const [scrolled, setScrolled] = React.useState(false)
+  const [mounted, setMounted] = React.useState(false)
+
+  React.useEffect(() => {
+    setMounted(true)
+  }, [])
 
   React.useEffect(() => {
     setOpen(false)
@@ -47,10 +53,25 @@ export function Navbar() {
     }
   }, [open])
 
+  React.useEffect(() => {
+    if (!open) {
+      return
+    }
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setOpen(false)
+      }
+    }
+
+    window.addEventListener("keydown", onKeyDown)
+    return () => window.removeEventListener("keydown", onKeyDown)
+  }, [open])
+
   return (
     <header
       className={cn(
-        "sticky top-0 z-40 border-b transition-all duration-300",
+        "sticky top-0 z-50 border-b transition-all duration-300",
         scrolled
           ? "border-slate-800/80 bg-slate-950/90 shadow-[0_1px_0_rgba(255,255,255,0.04)] backdrop-blur-2xl"
           : "border-transparent bg-slate-950/60 backdrop-blur-xl"
@@ -126,53 +147,71 @@ export function Navbar() {
       </div>
 
       {/* Mobile menu */}
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.2, ease: "easeOut" }}
-            className="fixed inset-x-0 bottom-0 top-16 z-50 overflow-y-auto border-t border-slate-800/70 bg-slate-950/98 px-4 py-5 backdrop-blur-2xl md:hidden"
-          >
-            <nav className="flex flex-col gap-1" aria-label="Mobile">
-              {navItems.map((item) => {
-                const isActive = isItemActive(pathname, item.href)
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
+      {mounted
+        ? createPortal(
+            <AnimatePresence>
+              {open ? (
+                <>
+                  <motion.button
+                    type="button"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.18 }}
+                    className="fixed inset-0 z-[60] bg-slate-950/75 backdrop-blur-[1px] md:hidden"
                     onClick={() => setOpen(false)}
-                    className={cn(
-                      "flex items-center justify-between rounded-xl px-4 py-3.5 text-sm font-medium transition-colors",
-                      isActive
-                        ? "bg-blue-500/10 text-slate-100"
-                        : "text-slate-400 hover:bg-slate-800/60 hover:text-slate-200"
-                    )}
-                    aria-current={isActive ? "page" : undefined}
+                    aria-label="Close navigation menu"
+                  />
+
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2, ease: "easeOut" }}
+                    className="fixed inset-x-0 bottom-0 top-16 z-[70] overflow-y-auto border-t border-slate-800/70 bg-slate-950/98 px-4 py-5 backdrop-blur-2xl md:hidden"
                   >
-                    <span className="flex items-center gap-2">
-                      {item.label}
-                      {item.badge ? (
-                        <Badge className="border-blue-500/40 bg-blue-500/15 px-1.5 py-0 text-[9px] uppercase tracking-wide text-blue-300">
-                          {item.badge}
-                        </Badge>
-                      ) : null}
-                    </span>
-                  </Link>
-                )
-              })}
-              <div className="mt-4 border-t border-slate-800 pt-4">
-                <Link href="/app" className="block" onClick={() => setOpen(false)}>
-                  <Button className="w-full bg-blue-500 text-white hover:bg-blue-400">
-                    Get Started Free
-                  </Button>
-                </Link>
-              </div>
-            </nav>
-          </motion.div>
-        )}
-      </AnimatePresence>
+                    <nav className="flex flex-col gap-1" aria-label="Mobile">
+                      {navItems.map((item) => {
+                        const isActive = isItemActive(pathname, item.href)
+                        return (
+                          <Link
+                            key={item.href}
+                            href={item.href}
+                            onClick={() => setOpen(false)}
+                            className={cn(
+                              "flex items-center justify-between rounded-xl px-4 py-3.5 text-sm font-medium transition-colors",
+                              isActive
+                                ? "bg-blue-500/10 text-slate-100"
+                                : "text-slate-400 hover:bg-slate-800/60 hover:text-slate-200"
+                            )}
+                            aria-current={isActive ? "page" : undefined}
+                          >
+                            <span className="flex items-center gap-2">
+                              {item.label}
+                              {item.badge ? (
+                                <Badge className="border-blue-500/40 bg-blue-500/15 px-1.5 py-0 text-[9px] uppercase tracking-wide text-blue-300">
+                                  {item.badge}
+                                </Badge>
+                              ) : null}
+                            </span>
+                          </Link>
+                        )
+                      })}
+                      <div className="mt-4 border-t border-slate-800 pt-4">
+                        <Link href="/app" className="block" onClick={() => setOpen(false)}>
+                          <Button className="w-full bg-blue-500 text-white hover:bg-blue-400">
+                            Get Started Free
+                          </Button>
+                        </Link>
+                      </div>
+                    </nav>
+                  </motion.div>
+                </>
+              ) : null}
+            </AnimatePresence>,
+            document.body
+          )
+        : null}
     </header>
   )
 }
