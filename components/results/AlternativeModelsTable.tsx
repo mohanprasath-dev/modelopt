@@ -87,7 +87,7 @@ export function AlternativeModelsTable({
   }
 
   return (
-    <section className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6">
+    <section className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/60 p-4 sm:p-6">
       <button
         type="button"
         onClick={() => setOpen((prev) => !prev)}
@@ -100,8 +100,30 @@ export function AlternativeModelsTable({
       </button>
 
       {open ? (
-        <div id="alternative-models-table" className="mt-4 overflow-x-auto">
-          <table className="w-full min-w-[760px] border-collapse text-sm">
+        <div id="alternative-models-table" className="mt-4">
+          <div className="space-y-3 md:hidden">
+            {sorted.map((model) => (
+              <article key={model.name} className="rounded-xl border border-slate-800 bg-slate-950/65 p-3">
+                <p className="text-sm font-semibold text-slate-100 break-words">{model.display_name}</p>
+                <p className="mt-1 text-xs text-slate-400">
+                  {model.size} · {model.vram_min_gb}GB VRAM · ~{Math.round(model.est_speed_tps)} tok/s
+                </p>
+                <p className="mt-2 break-words text-xs text-slate-500">{model.use_cases.join(", ")}</p>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="mt-3 h-8 w-full border-slate-700 text-xs text-slate-200"
+                  onClick={() => onToggleCompare?.(model.name)}
+                  disabled={!selectedNames.includes(model.name) && selectedNames.length >= maxSelections}
+                >
+                  {selectedNames.includes(model.name) ? "Remove" : "Compare"}
+                </Button>
+              </article>
+            ))}
+          </div>
+
+          <div className="hidden overflow-x-auto md:block">
+            <table className="w-full min-w-[760px] border-collapse text-sm">
             <thead>
               <tr className="border-b border-slate-700 text-left text-slate-400">
                 <th className="py-2">
@@ -154,7 +176,8 @@ export function AlternativeModelsTable({
                 </tr>
               ))}
             </tbody>
-          </table>
+            </table>
+          </div>
         </div>
       ) : null}
     </section>

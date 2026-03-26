@@ -354,7 +354,7 @@ export default function ResultsPage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-950 px-6 py-10 text-slate-100 print:bg-white print:px-0 print:py-0 print:text-slate-900 sm:px-8">
+    <main className="min-h-screen overflow-x-clip bg-slate-950 px-3 py-8 text-slate-100 print:bg-white print:px-0 print:py-0 print:text-slate-900 sm:px-8 sm:py-10">
       <div className="mx-auto w-full max-w-7xl space-y-7 print:max-w-none print:space-y-4 print:p-8">
         <section className="hidden border-b border-slate-200 pb-4 print:block">
           <h1 className="text-2xl font-bold text-slate-900">ModelOpt Result Report</h1>
@@ -366,7 +366,7 @@ export default function ResultsPage() {
               <ArrowLeft className="mr-1 size-4" />
               Optimize Again
             </Link>
-            <h1 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">Your Optimized AI Stack</h1>
+            <h1 className="mt-3 text-2xl font-bold tracking-tight sm:text-4xl">Your Optimized AI Stack</h1>
             <p className="mt-2 text-sm text-slate-400">
               Generated on {generatedAt || new Date().toLocaleString()}
             </p>
@@ -400,7 +400,7 @@ export default function ResultsPage() {
               const active = selectedCompare.includes(card.name)
 
               return (
-                <div key={card.name} className="space-y-2">
+                <div key={card.name} className="min-w-0 space-y-2">
                   <ModelRecommendationCard data={card} index={index} />
                   <Button
                     type="button"
@@ -419,26 +419,26 @@ export default function ResultsPage() {
         </section>
 
         {selectedModels.length > 0 ? (
-          <section className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6">
+          <section className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/60 p-4 sm:p-6">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <h2 className="text-xl font-semibold text-slate-100">Comparison Workspace</h2>
-              <div className="flex gap-2">
-                <Button variant="outline" onClick={() => setSelectedCompare([])}>
+              <div className="flex w-full flex-wrap gap-2 sm:w-auto">
+                <Button variant="outline" onClick={() => setSelectedCompare([])} className="flex-1 sm:flex-none">
                   Clear Selection
                 </Button>
-                <Link href={`/compare?models=${encodeURIComponent(selectedCompare.join(","))}`}>
-                  <Button className="bg-blue-500 text-white hover:bg-blue-400">Open Compare Page</Button>
+                <Link href={`/compare?models=${encodeURIComponent(selectedCompare.join(","))}`} className="flex-1 sm:flex-none">
+                  <Button className="w-full bg-blue-500 text-white hover:bg-blue-400 sm:w-auto">Open Compare Page</Button>
                 </Link>
               </div>
             </div>
             <p className="mt-2 text-sm text-slate-400">Selected {selectedModels.length}/4 models. Your selection is encoded in the URL for sharing.</p>
             <div className="mt-4 grid gap-3 md:grid-cols-2">
               {selectedModels.map((model) => (
-                <article key={model.name} className="rounded-xl border border-slate-700 bg-slate-950/70 p-4">
-                  <h3 className="text-base font-semibold text-slate-100">{model.display_name}</h3>
+                <article key={model.name} className="min-w-0 rounded-xl border border-slate-700 bg-slate-950/70 p-4">
+                  <h3 className="text-base font-semibold text-slate-100 break-words">{model.display_name}</h3>
                   <p className="mt-2 text-sm text-slate-300">{model.size} · {model.vram_min_gb}GB VRAM min</p>
                   <p className="mt-1 text-sm text-slate-400">Context {model.context_window.toLocaleString()} · ~{Math.round(model.est_speed_tps)} tok/s</p>
-                  <p className="mt-2 text-xs text-slate-500">{model.use_cases.join(", ")}</p>
+                  <p className="mt-2 break-words text-xs text-slate-500">{model.use_cases.join(", ")}</p>
                 </article>
               ))}
             </div>

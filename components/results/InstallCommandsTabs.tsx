@@ -32,13 +32,13 @@ function CommandBlock({
 
   return (
     <div className="rounded-xl border border-slate-700 bg-slate-950/80 p-3">
-      <div className="mb-2 flex items-center justify-between gap-3">
+      <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
         <p className="text-xs font-medium uppercase tracking-wide text-slate-400">{label}</p>
         <Button
           type="button"
           size="sm"
           variant="outline"
-          className="h-7 border-slate-600 bg-slate-900 text-slate-200 hover:bg-slate-800"
+          className="h-7 shrink-0 border-slate-600 bg-slate-900 text-slate-200 hover:bg-slate-800"
           onClick={copy}
           aria-label={copyLabel}
         >
@@ -46,7 +46,7 @@ function CommandBlock({
           {copied ? "Copied!" : "Copy"}
         </Button>
       </div>
-      <pre className="overflow-x-auto rounded-lg bg-slate-900/70 p-2 text-xs text-slate-200">
+      <pre className="overflow-x-auto rounded-lg bg-slate-900/70 p-2 text-xs text-slate-200 whitespace-pre-wrap break-words">
         <code>{value}</code>
       </pre>
     </div>
