@@ -99,7 +99,7 @@ export function Footer() {
                   <Button
                     type="submit"
                     size="sm"
-                    className="shrink-0 bg-blue-500 text-white hover:bg-blue-400"
+                    className="rounded-lg shrink-0 bg-blue-500 text-white hover:bg-blue-400"
                   >
                     Join
                   </Button>

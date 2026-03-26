@@ -152,6 +152,7 @@ export default function ResultsPage() {
   const [result, setResult] = React.useState<OptimizeApiResult | null>(null)
   const [generatedAt, setGeneratedAt] = React.useState("")
   const [selectedCompare, setSelectedCompare] = React.useState<string[]>([])
+  const [isExportingPdf, setIsExportingPdf] = React.useState(false)
 
   const loadData = React.useCallback(async () => {
     setLoading(true)
@@ -327,12 +328,41 @@ export default function ResultsPage() {
     router.push("/app")
   }
 
+  const exportAsPdf = async () => {
+    if (isExportingPdf) {
+      return
+    }
+
+    setIsExportingPdf(true)
+    const previousTitle = document.title
+    document.body.classList.add("pdf-exporting")
+    document.title = `ModelOpt Results - ${generatedAt || new Date().toLocaleString()}`
+
+    await new Promise<void>((resolve) => {
+      window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(() => resolve())
+      })
+    })
+
+    window.print()
+
+    window.setTimeout(() => {
+      document.body.classList.remove("pdf-exporting")
+      document.title = previousTitle
+      setIsExportingPdf(false)
+    }, 250)
+  }
+
   return (
-    <main className="min-h-screen bg-slate-950 px-6 py-10 text-slate-100 sm:px-8">
-      <div className="mx-auto w-full max-w-7xl space-y-7">
+    <main className="min-h-screen bg-slate-950 px-6 py-10 text-slate-100 print:bg-white print:px-0 print:py-0 print:text-slate-900 sm:px-8">
+      <div className="mx-auto w-full max-w-7xl space-y-7 print:max-w-none print:space-y-4 print:p-8">
+        <section className="hidden border-b border-slate-200 pb-4 print:block">
+          <h1 className="text-2xl font-bold text-slate-900">ModelOpt Result Report</h1>
+          <p className="mt-1 text-sm text-slate-600">Generated on {generatedAt || new Date().toLocaleString()}</p>
+        </section>
         <header className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <Link href="/app" className="inline-flex items-center text-sm text-slate-400 hover:text-slate-200">
+            <Link href="/app" className="inline-flex items-center text-sm text-slate-400 hover:text-slate-200 print:hidden">
               <ArrowLeft className="mr-1 size-4" />
               Optimize Again
             </Link>
@@ -364,7 +394,7 @@ export default function ResultsPage() {
                 },
               },
             }}
-            className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+            className="grid gap-4 print:grid-cols-2 sm:grid-cols-2 lg:grid-cols-3"
           >
             {cards.map((card, index) => {
               const active = selectedCompare.includes(card.name)
@@ -436,9 +466,14 @@ export default function ResultsPage() {
                 <Share2 className="mr-2 size-4" />
                 Share Results
               </Button>
-              <Button variant="outline" onClick={() => window.print()}>
+              <Button
+                variant="outline"
+                onClick={() => void exportAsPdf()}
+                disabled={isExportingPdf}
+                className="border-blue-400/40 text-blue-200 hover:bg-blue-500/10"
+              >
                 <Printer className="mr-2 size-4" />
-                Export as PDF
+                {isExportingPdf ? "Preparing PDF..." : "Export as PDF"}
               </Button>
             </div>
           </div>
