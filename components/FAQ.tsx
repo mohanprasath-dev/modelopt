@@ -33,7 +33,7 @@ const faqs = [
   {
     question: "What models are supported?",
     answer:
-      "We track 20+ popular models including Llama 3, Mistral, Qwen, Phi-3, Gemma, CodeLlama, and more. The database is continuously updated as new models are released.",
+      "We track 28+ modern models including Llama 4, Gemma 4, DeepSeek, Qwen 2.5/3, Mistral, Phi, and Codestral families. The catalog is continuously refreshed as new releases land.",
   },
   {
     question: "Is my data stored or tracked?",
@@ -46,11 +46,11 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
   const [isOpen, setIsOpen] = React.useState(false)
 
   return (
-    <div className="border-b border-slate-800/80 last:border-0">
+    <div className="border-b border-slate-200 last:border-0">
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
-        className="flex w-full items-center justify-between py-5 text-left text-sm font-medium text-slate-200 transition-colors hover:text-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+        className="flex w-full items-center justify-between py-5 text-left text-sm font-medium text-slate-800 transition-colors hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
         aria-expanded={isOpen}
       >
         {question}
@@ -72,7 +72,7 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
             transition={{ duration: 0.25, ease: [0.04, 0.62, 0.23, 0.98] }}
             className="overflow-hidden"
           >
-            <p className="pb-5 text-sm leading-relaxed text-slate-400">{answer}</p>
+            <p className="pb-5 text-sm leading-relaxed text-slate-600">{answer}</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -91,12 +91,12 @@ export function FAQ() {
           transition={{ duration: 0.55 }}
           className="mb-12 text-center"
         >
-          <span className="inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-800/60 px-3 py-1 text-xs font-medium text-slate-400">
+          <span className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-600 shadow-[0_6px_16px_rgba(15,23,42,0.06)]">
             FAQ
           </span>
           <h2
             id="faq-title"
-            className="mt-4 text-3xl font-extrabold tracking-tight text-slate-100 sm:text-4xl"
+            className="mt-4 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl"
           >
             Common questions
           </h2>
@@ -107,7 +107,7 @@ export function FAQ() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.55, delay: 0.1 }}
-          className="rounded-2xl border border-slate-800/80 bg-slate-900/50 px-6 py-2 backdrop-blur-sm"
+          className="rounded-2xl border border-slate-200 bg-white/92 px-6 py-2 shadow-[0_10px_30px_rgba(15,23,42,0.07)] backdrop-blur-sm"
         >
           {faqs.map((faq) => (
             <FAQItem key={faq.question} question={faq.question} answer={faq.answer} />

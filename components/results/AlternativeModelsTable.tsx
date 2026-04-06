@@ -87,7 +87,7 @@ export function AlternativeModelsTable({
   }
 
   return (
-    <section className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/60 p-4 sm:p-6">
+    <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-[0_12px_34px_rgba(15,23,42,0.08)] sm:p-6">
       <button
         type="button"
         onClick={() => setOpen((prev) => !prev)}
@@ -95,24 +95,24 @@ export function AlternativeModelsTable({
         aria-expanded={open}
         aria-controls="alternative-models-table"
       >
-        <h2 className="text-xl font-semibold text-slate-100">Alternative Models</h2>
-        <ChevronDown className={`size-4 text-slate-400 transition-transform ${open ? "rotate-180" : ""}`} />
+        <h2 className="text-xl font-semibold text-slate-900">Alternative Models</h2>
+        <ChevronDown className={`size-4 text-slate-500 transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
 
       {open ? (
         <div id="alternative-models-table" className="mt-4">
           <div className="space-y-3 md:hidden">
             {sorted.map((model) => (
-              <article key={model.name} className="rounded-xl border border-slate-800 bg-slate-950/65 p-3">
-                <p className="text-sm font-semibold text-slate-100 break-words">{model.display_name}</p>
-                <p className="mt-1 text-xs text-slate-400">
+              <article key={model.name} className="rounded-xl border border-slate-200 bg-slate-50 p-3">
+                <p className="text-sm font-semibold text-slate-900 break-words">{model.display_name}</p>
+                <p className="mt-1 text-xs text-slate-600">
                   {model.size} · {model.vram_min_gb}GB VRAM · ~{Math.round(model.est_speed_tps)} tok/s
                 </p>
                 <p className="mt-2 break-words text-xs text-slate-500">{model.use_cases.join(", ")}</p>
                 <Button
                   type="button"
                   variant="outline"
-                  className="mt-3 h-8 w-full border-slate-700 text-xs text-slate-200"
+                  className="mt-3 h-8 w-full border-slate-300 bg-white text-xs text-slate-700 hover:bg-slate-100"
                   onClick={() => onToggleCompare?.(model.name)}
                   disabled={!selectedNames.includes(model.name) && selectedNames.length >= maxSelections}
                 >
@@ -125,48 +125,48 @@ export function AlternativeModelsTable({
           <div className="hidden overflow-x-auto md:block">
             <table className="w-full min-w-[760px] border-collapse text-sm">
             <thead>
-              <tr className="border-b border-slate-700 text-left text-slate-400">
+              <tr className="border-b border-slate-200 text-left text-slate-500">
                 <th className="py-2">
-                  <Button type="button" variant="ghost" className="h-7 px-1 text-slate-300" onClick={() => applySort("name")}>
+                  <Button type="button" variant="ghost" className="h-7 px-1 text-slate-700 hover:bg-slate-100" onClick={() => applySort("name")}>
                     Name <ChevronsUpDown className="ml-1 size-3" />
                   </Button>
                 </th>
                 <th className="py-2">
-                  <Button type="button" variant="ghost" className="h-7 px-1 text-slate-300" onClick={() => applySort("size")}>
+                  <Button type="button" variant="ghost" className="h-7 px-1 text-slate-700 hover:bg-slate-100" onClick={() => applySort("size")}>
                     Size <ChevronsUpDown className="ml-1 size-3" />
                   </Button>
                 </th>
                 <th className="py-2">
-                  <Button type="button" variant="ghost" className="h-7 px-1 text-slate-300" onClick={() => applySort("vram")}>
+                  <Button type="button" variant="ghost" className="h-7 px-1 text-slate-700 hover:bg-slate-100" onClick={() => applySort("vram")}>
                     VRAM <ChevronsUpDown className="ml-1 size-3" />
                   </Button>
                 </th>
                 <th className="py-2">
-                  <Button type="button" variant="ghost" className="h-7 px-1 text-slate-300" onClick={() => applySort("use_cases")}>
+                  <Button type="button" variant="ghost" className="h-7 px-1 text-slate-700 hover:bg-slate-100" onClick={() => applySort("use_cases")}>
                     Use Cases <ChevronsUpDown className="ml-1 size-3" />
                   </Button>
                 </th>
                 <th className="py-2">
-                  <Button type="button" variant="ghost" className="h-7 px-1 text-slate-300" onClick={() => applySort("speed")}>
+                  <Button type="button" variant="ghost" className="h-7 px-1 text-slate-700 hover:bg-slate-100" onClick={() => applySort("speed")}>
                     Est. Speed <ChevronsUpDown className="ml-1 size-3" />
                   </Button>
                 </th>
-                <th className="py-2 text-right text-slate-400">Compare</th>
+                <th className="py-2 text-right text-slate-500">Compare</th>
               </tr>
             </thead>
             <tbody>
               {sorted.map((model) => (
-                <tr key={model.name} className="border-b border-slate-800 text-slate-200">
+                <tr key={model.name} className="border-b border-slate-100 text-slate-700">
                   <td className="py-2 pr-4">{model.display_name}</td>
                   <td className="py-2 pr-4">{model.size}</td>
                   <td className="py-2 pr-4">{model.vram_min_gb}GB</td>
-                  <td className="py-2 pr-4 text-slate-300">{model.use_cases.join(", ")}</td>
+                  <td className="py-2 pr-4 text-slate-600">{model.use_cases.join(", ")}</td>
                   <td className="py-2">{Math.round(model.est_speed_tps)} tok/s</td>
                   <td className="py-2 text-right">
                     <Button
                       type="button"
                       variant="outline"
-                      className="h-8 border-slate-700 text-xs text-slate-200"
+                      className="h-8 border-slate-300 bg-white text-xs text-slate-700 hover:bg-slate-100"
                       onClick={() => onToggleCompare?.(model.name)}
                       disabled={!selectedNames.includes(model.name) && selectedNames.length >= maxSelections}
                     >

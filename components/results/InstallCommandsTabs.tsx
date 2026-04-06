@@ -31,14 +31,14 @@ function CommandBlock({
   }
 
   return (
-    <div className="rounded-xl border border-slate-700 bg-slate-950/80 p-3">
+    <div className="rounded-xl border border-slate-200 bg-slate-50/75 p-3">
       <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
-        <p className="text-xs font-medium uppercase tracking-wide text-slate-400">{label}</p>
+        <p className="text-xs font-medium uppercase tracking-wide text-slate-600">{label}</p>
         <Button
           type="button"
           size="sm"
           variant="outline"
-          className="h-7 shrink-0 border-slate-600 bg-slate-900 text-slate-200 hover:bg-slate-800"
+          className="h-7 shrink-0 border-slate-300 bg-white text-slate-700 hover:bg-slate-100"
           onClick={copy}
           aria-label={copyLabel}
         >
@@ -46,7 +46,7 @@ function CommandBlock({
           {copied ? "Copied!" : "Copy"}
         </Button>
       </div>
-      <pre className="overflow-x-auto rounded-lg bg-slate-900/70 p-2 text-xs text-slate-200 whitespace-pre-wrap break-words">
+      <pre className="max-h-36 overflow-x-auto overflow-y-auto rounded-lg border border-slate-200 bg-white p-2 text-xs text-slate-700 whitespace-pre-wrap break-words">
         <code>{value}</code>
       </pre>
     </div>
@@ -61,10 +61,10 @@ export function InstallCommandsTabs({
 }: InstallCommandsTabsProps) {
   return (
     <Tabs defaultValue="ollama" className="w-full">
-      <TabsList className="mb-3 bg-slate-800/80 p-1" variant="default">
-        <TabsTrigger value="ollama">Ollama</TabsTrigger>
-        <TabsTrigger value="llama_cpp">llama.cpp</TabsTrigger>
-        <TabsTrigger value="huggingface">HuggingFace</TabsTrigger>
+      <TabsList className="mb-3 border border-slate-200 bg-white p-1" variant="default">
+        <TabsTrigger value="ollama" className="text-slate-600 data-active:text-slate-900">Ollama</TabsTrigger>
+        <TabsTrigger value="llama_cpp" className="text-slate-600 data-active:text-slate-900">llama.cpp</TabsTrigger>
+        <TabsTrigger value="huggingface" className="text-slate-600 data-active:text-slate-900">HuggingFace</TabsTrigger>
       </TabsList>
 
       <TabsContent value="ollama">

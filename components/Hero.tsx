@@ -27,7 +27,7 @@ const fadeUp = {
 export function Hero() {
   return (
     <section
-      className="relative overflow-hidden bg-slate-950 px-6 py-24 sm:px-8 sm:py-32"
+      className="relative overflow-hidden bg-gradient-to-b from-white via-[#f5f8ff] to-[#eef4ff] px-6 py-24 sm:px-8 sm:py-32"
       aria-labelledby="hero-title"
     >
       {/* Particles background */}
@@ -36,8 +36,8 @@ export function Hero() {
       </div>
 
       {/* Radial gradient overlay for depth */}
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,rgba(59,130,246,0.15),transparent)]" />
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-slate-950" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,rgba(59,130,246,0.18),transparent)]" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#eef4ff]" />
 
       {/* Grid pattern */}
       <div className="bg-grid pointer-events-none absolute inset-0 opacity-60" />
@@ -46,7 +46,7 @@ export function Hero() {
         {/* Left: Text */}
         <motion.div {...fadeUp}>
           {/* Eyebrow badge */}
-          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-500/10 px-4 py-1.5 text-xs font-medium tracking-wide text-blue-300">
+          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-4 py-1.5 text-xs font-medium tracking-wide text-blue-700">
             <span className="inline-flex size-1.5 rounded-full bg-blue-400 animate-pulse" />
             ModelOpt for Local AI Builders
           </div>
@@ -58,14 +58,14 @@ export function Hero() {
           >
             <SplitText
               text="Find Your Perfect AI Model"
-              className="block text-slate-100"
+              className="block text-slate-900"
               stagger={0.05}
               duration={0.5}
             />
           </h1>
 
           <motion.p
-            className="mt-6 max-w-xl text-lg leading-relaxed text-slate-400"
+            className="mt-6 max-w-xl text-lg leading-relaxed text-slate-600"
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -87,7 +87,7 @@ export function Hero() {
               href="/app"
               className={cn(
                 buttonVariants({ size: "lg" }),
-                "group relative h-12 overflow-hidden rounded-xl border border-blue-400/40 bg-blue-500 px-6 text-base font-semibold text-white shadow-[0_0_35px_rgba(59,130,246,0.4)] transition-all hover:bg-blue-400 hover:shadow-[0_0_50px_rgba(59,130,246,0.55)] focus-visible:ring-blue-300"
+                "group relative h-12 overflow-hidden rounded-xl border border-blue-300 bg-blue-600 px-6 text-base font-semibold text-white shadow-[0_12px_30px_rgba(37,99,235,0.3)] transition-all hover:-translate-y-0.5 hover:bg-blue-500 hover:shadow-[0_16px_35px_rgba(37,99,235,0.36)] focus-visible:ring-blue-400"
               )}
               aria-label="Open the optimizer to get started"
             >
@@ -95,10 +95,10 @@ export function Hero() {
               <ChevronRight className="ml-1 size-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
             </Link>
             <a
-              href="#demo"
+              href="#demo-preview"
               className={cn(
                 buttonVariants({ size: "lg", variant: "outline" }),
-                "h-12 rounded-xl border-slate-700 px-6 text-base text-slate-200 hover:border-slate-600 hover:bg-slate-800/60"
+                "h-12 rounded-xl border-slate-300 bg-white/90 px-6 text-base text-slate-700 shadow-[0_8px_22px_rgba(15,23,42,0.08)] hover:border-slate-400 hover:bg-white"
               )}
             >
               View Demo
@@ -107,7 +107,7 @@ export function Hero() {
 
           {/* Stats row */}
           <motion.div
-            className="mt-10 flex flex-wrap items-center gap-6 text-sm text-slate-500"
+            className="mt-10 flex flex-wrap items-center gap-6 text-sm text-slate-600"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
@@ -119,7 +119,7 @@ export function Hero() {
             </span>
             <span className="flex items-center gap-1.5">
               <HardDrive className="size-3.5 text-blue-400" />
-              <span>20+ AI models</span>
+              <span>28+ AI models</span>
             </span>
             <span className="flex items-center gap-1.5">
               <Zap className="size-3.5 text-blue-400" />
@@ -133,19 +133,19 @@ export function Hero() {
           {...fadeUp}
           transition={{ ...fadeUp.transition, delay: 0.15 }}
           className="relative"
-          id="demo"
+          id="demo-preview"
         >
           {/* Glow ring behind card */}
-          <div className="absolute -inset-[1px] rounded-3xl bg-gradient-to-br from-blue-500/40 via-blue-400/10 to-transparent blur-sm" />
+          <div className="absolute -inset-[1px] rounded-3xl bg-gradient-to-br from-blue-300/45 via-blue-200/20 to-transparent blur-sm" />
 
-          <div className="relative rounded-3xl border border-slate-800/80 bg-slate-900/60 p-6 shadow-2xl backdrop-blur-xl sm:p-8">
+          <div className="relative rounded-3xl border border-slate-200 bg-white/95 p-6 shadow-[0_22px_50px_rgba(15,23,42,0.12)] backdrop-blur-xl sm:p-8">
             {/* Card header */}
             <div className="mb-6 flex items-center justify-between">
               <div>
-                <h2 className="text-base font-semibold text-slate-100">Quick Preview</h2>
-                <p className="mt-0.5 text-xs text-slate-500">Visual preview only — not live</p>
+                <h2 className="text-base font-semibold text-slate-900">Quick Preview</h2>
+                <p className="mt-0.5 text-xs text-slate-500">Visual preview only - not live</p>
               </div>
-              <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-emerald-400">
+              <span className="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-emerald-700">
                 <span className="size-1.5 rounded-full bg-emerald-400 animate-pulse" />
                 Demo
               </span>
@@ -154,10 +154,10 @@ export function Hero() {
             <div className="space-y-5">
               {/* GPU */}
               <div>
-                <label className="mb-2 block text-sm font-medium text-slate-300">GPU</label>
+                <label className="mb-2 block text-sm font-medium text-slate-700">GPU</label>
                 <Select defaultValue="rtx_4090">
                   <SelectTrigger
-                    className="h-11 w-full rounded-xl border-slate-700 bg-slate-950/70 text-slate-100"
+                    className="h-11 w-full rounded-xl border-slate-300 bg-white text-slate-900"
                     aria-label="GPU model preview"
                   >
                     <SelectValue placeholder="RTX 4090" />
@@ -173,9 +173,9 @@ export function Hero() {
 
               {/* RAM */}
               <div>
-                <p className="mb-2 text-sm font-medium text-slate-300">System RAM</p>
+                <p className="mb-2 text-sm font-medium text-slate-700">System RAM</p>
                 <div
-                  className="grid grid-cols-4 gap-2"
+                  className="grid grid-cols-2 gap-2 sm:grid-cols-4"
                   role="group"
                   aria-label="RAM selector preview"
                 >
@@ -187,7 +187,7 @@ export function Hero() {
                         "rounded-xl border px-2 py-2.5 text-xs font-medium transition-all",
                         ram === "16GB"
                           ? "border-blue-500/50 bg-blue-500/15 text-blue-300 shadow-[0_0_15px_rgba(59,130,246,0.2)]"
-                          : "border-slate-700/70 bg-slate-900/50 text-slate-400 hover:border-slate-600"
+                            : "border-slate-300 bg-white text-slate-600 hover:border-slate-400"
                       )}
                       aria-pressed={ram === "16GB"}
                       tabIndex={-1}
@@ -200,7 +200,7 @@ export function Hero() {
 
               {/* Use cases */}
               <div>
-                <p className="mb-2 text-sm font-medium text-slate-300">Use Cases</p>
+                <p className="mb-2 text-sm font-medium text-slate-700">Use Cases</p>
                 <div className="flex flex-wrap gap-2" role="list">
                   {["Coding", "Chat", "Creative", "Research"].map((uc) => (
                     <Badge
@@ -210,7 +210,7 @@ export function Hero() {
                         "rounded-full px-3 py-1 text-xs",
                         ["Coding", "Chat"].includes(uc)
                           ? "border-blue-500/40 bg-blue-500/10 text-blue-300"
-                          : "border-slate-700 bg-slate-800/60 text-slate-400"
+                            : "border-slate-300 bg-white text-slate-600"
                       )}
                       role="listitem"
                     >
@@ -221,10 +221,10 @@ export function Hero() {
               </div>
 
               {/* Recommendation preview */}
-              <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-3">
-                <p className="text-xs font-semibold text-emerald-400">Top Match</p>
-                <p className="mt-1 text-sm font-semibold text-slate-100">Qwen2.5-Coder 7B</p>
-                <p className="mt-0.5 text-xs text-slate-500">7B · 5GB VRAM · ~42 tok/s</p>
+              <div className="rounded-xl border border-emerald-200 bg-emerald-50/70 p-3">
+                <p className="text-xs font-semibold text-emerald-700">Top Match</p>
+                <p className="mt-1 text-sm font-semibold text-slate-900">Qwen2.5-Coder 7B</p>
+                <p className="mt-0.5 text-xs text-slate-600">7B - 5GB VRAM - ~42 tok/s</p>
               </div>
             </div>
           </div>

@@ -62,17 +62,17 @@ export function Features() {
           transition={{ duration: 0.55 }}
           className="mb-12 text-center"
         >
-          <span className="inline-flex items-center gap-2 rounded-full border border-blue-500/25 bg-blue-500/8 px-3 py-1 text-xs font-medium text-blue-400">
+          <span className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700">
             Why ModelOpt
           </span>
           <h2
             id="features-title"
-            className="mt-4 text-3xl font-extrabold tracking-tight text-slate-100 sm:text-4xl"
+            className="mt-4 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl"
           >
             Everything you need to run{" "}
             <span className="gradient-text">local AI confidently</span>
           </h2>
-          <p className="mx-auto mt-4 max-w-xl text-slate-400">
+          <p className="mx-auto mt-4 max-w-xl text-slate-600">
             Stop guessing which model fits your hardware. ModelOpt does the math so you can get
             running in minutes.
           </p>
@@ -91,11 +91,11 @@ export function Features() {
             return (
               <motion.div key={feature.title} variants={cardVariants}>
                 <SpotlightCard className="h-full p-6">
-                  <div className="mb-4 inline-flex size-12 items-center justify-center rounded-xl border border-blue-500/25 bg-blue-500/10 text-blue-400">
+                  <div className="mb-4 inline-flex size-12 items-center justify-center rounded-xl border border-blue-200 bg-blue-50 text-blue-700">
                     <Icon className="size-5" aria-hidden="true" />
                   </div>
-                  <h3 className="mb-2 font-semibold text-slate-100">{feature.title}</h3>
-                  <p className="text-sm leading-relaxed text-slate-400">{feature.description}</p>
+                  <h3 className="mb-2 font-semibold text-slate-900">{feature.title}</h3>
+                  <p className="text-sm leading-relaxed text-slate-600">{feature.description}</p>
                 </SpotlightCard>
               </motion.div>
             )

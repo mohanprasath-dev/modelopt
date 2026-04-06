@@ -17,10 +17,10 @@ export default function GlobalError({
   }, [error])
 
   return (
-    <main className="flex min-h-[70vh] items-center justify-center px-6 py-16 text-slate-100">
-      <section className="w-full max-w-xl rounded-2xl border border-red-500/30 bg-slate-900/80 p-8 text-center">
+    <main className="flex min-h-[70vh] items-center justify-center bg-gradient-to-b from-slate-50 via-white to-slate-100/70 px-6 py-16 text-slate-900">
+      <section className="w-full max-w-xl rounded-2xl border border-red-200 bg-white/95 p-8 text-center shadow-[0_16px_48px_rgba(15,23,42,0.08)]">
         <h1 className="text-3xl font-bold">Something went wrong</h1>
-        <p className="mt-3 text-slate-300">
+        <p className="mt-3 text-slate-600">
           We hit an unexpected error. You can retry, return home, or open the optimizer.
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-3">

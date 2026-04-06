@@ -48,12 +48,12 @@ export function HowItWorks() {
           transition={{ duration: 0.55 }}
           className="mb-14 text-center"
         >
-          <span className="inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-800/60 px-3 py-1 text-xs font-medium text-slate-400">
+          <span className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-600 shadow-[0_6px_16px_rgba(15,23,42,0.06)]">
             How It Works
           </span>
           <h2
             id="how-it-works-title"
-            className="mt-4 text-3xl font-extrabold tracking-tight text-slate-100 sm:text-4xl"
+            className="mt-4 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl"
           >
             From specs to running model{" "}
             <span className="gradient-text">in three steps</span>
@@ -63,7 +63,7 @@ export function HowItWorks() {
         {/* Steps */}
         <div className="relative">
           {/* Vertical connector line */}
-          <div className="absolute left-7 top-16 hidden h-[calc(100%-8rem)] w-px bg-gradient-to-b from-blue-500/40 via-violet-500/30 to-emerald-500/30 sm:block" />
+          <div className="absolute left-7 top-16 hidden h-[calc(100%-8rem)] w-px bg-gradient-to-b from-blue-300 via-violet-300 to-emerald-300 sm:block" />
 
           <div className="space-y-6">
             {steps.map((step, index) => {
@@ -87,14 +87,14 @@ export function HowItWorks() {
                   </div>
 
                   {/* Step content */}
-                  <div className="min-w-0 flex-1 rounded-2xl border border-slate-800/70 bg-slate-900/50 p-5 backdrop-blur-sm">
+                  <div className="min-w-0 flex-1 rounded-2xl border border-slate-200 bg-white/90 p-5 shadow-[0_8px_20px_rgba(15,23,42,0.06)] backdrop-blur-sm">
                     <div className="mb-1 flex items-center gap-3">
                       <span className="font-mono text-xs font-bold text-slate-600">
                         {step.number}
                       </span>
-                      <h3 className="font-semibold text-slate-100">{step.title}</h3>
+                      <h3 className="font-semibold text-slate-900">{step.title}</h3>
                     </div>
-                    <p className="text-sm leading-relaxed text-slate-400">{step.description}</p>
+                    <p className="text-sm leading-relaxed text-slate-600">{step.description}</p>
                   </div>
                 </motion.div>
               )

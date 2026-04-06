@@ -7,6 +7,8 @@ const labelMap: Record<string, string> = {
   app: "Optimizer",
   results: "Results",
   docs: "Docs",
+  "getting-started": "Getting Started",
+  "model-comparison": "Model Comparison",
   pricing: "Pricing",
   about: "About",
   blog: "Blog",
@@ -36,16 +38,16 @@ export function Breadcrumb() {
   ]
 
   return (
-    <nav className="mx-auto w-full max-w-7xl px-4 py-3 text-sm text-slate-400 sm:px-6" aria-label="Breadcrumb">
+    <nav className="mx-auto w-full max-w-7xl px-4 py-3 text-sm text-slate-500 sm:px-6" aria-label="Breadcrumb">
       <ol className="flex flex-wrap items-center gap-2">
         {crumbs.map((crumb, index) => {
           const isCurrent = index === crumbs.length - 1
           return (
             <li key={crumb.href} className="inline-flex items-center gap-2">
               {isCurrent ? (
-                <span className="text-slate-200">{crumb.label}</span>
+                <span className="text-slate-900">{crumb.label}</span>
               ) : (
-                <Link href={crumb.href} className="hover:text-slate-100">
+                <Link href={crumb.href} className="transition-colors hover:text-slate-900">
                   {crumb.label}
                 </Link>
               )}

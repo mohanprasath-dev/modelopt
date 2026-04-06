@@ -26,6 +26,8 @@ import { Input } from "@/components/ui/input"
 
 const productLinks = [
   { href: "/app", label: "Optimizer" },
+  { href: "/tutorials", label: "Tutorials" },
+  { href: "/discord", label: "Discord" },
   { href: "/docs", label: "Docs" },
   { href: "/pricing", label: "Pricing" },
   { href: "/about", label: "About" },
@@ -61,20 +63,20 @@ export function Footer() {
 
   return (
     <footer
-      className="mt-16 border-t border-slate-800/70 bg-slate-950 px-4 py-14 sm:px-6"
+      className="mt-16 border-t border-slate-200 bg-white/90 px-4 py-14 shadow-[0_-8px_24px_rgba(15,23,42,0.04)] sm:px-6"
       aria-label="Site footer"
     >
       <div className="mx-auto w-full max-w-7xl">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           {/* Column 1: Brand + Newsletter */}
           <section>
-            <Link href="/" className="inline-flex items-center gap-2 text-slate-100">
-              <span className="inline-flex size-7 items-center justify-center rounded-lg bg-blue-500/20 text-blue-300 ring-1 ring-blue-500/30">
+            <Link href="/" className="inline-flex items-center gap-2 text-slate-900">
+              <span className="inline-flex size-7 items-center justify-center rounded-lg bg-blue-50 text-blue-600 ring-1 ring-blue-200">
                 <Sparkles className="size-4" />
               </span>
               <span className="font-bold tracking-tight">ModelOpt</span>
             </Link>
-            <p className="mt-3 text-sm text-slate-400">
+            <p className="mt-3 text-sm text-slate-600">
               AI Model Optimization Made Simple.<br />Free, fast, hardware-aware.
             </p>
             <form className="mt-5 space-y-2" onSubmit={subscribe} aria-label="Newsletter signup">
@@ -93,13 +95,13 @@ export function Footer() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="you@example.com"
-                    className="h-9 flex-1 border-slate-700 bg-slate-900 text-sm text-slate-100 placeholder:text-slate-600"
+                    className="h-9 flex-1 border-slate-300 bg-white text-sm text-slate-900 placeholder:text-slate-400"
                     required
                   />
                   <Button
                     type="submit"
                     size="sm"
-                    className="rounded-lg shrink-0 bg-blue-500 text-white hover:bg-blue-400"
+                    className="rounded-lg shrink-0 bg-blue-600 text-white hover:bg-blue-500"
                   >
                     Join
                   </Button>
@@ -110,13 +112,13 @@ export function Footer() {
 
           {/* Column 2: Product */}
           <section>
-            <h4 className="text-sm font-semibold text-slate-200">Product</h4>
+            <h4 className="text-sm font-semibold text-slate-900">Product</h4>
             <ul className="mt-4 space-y-2.5">
               {productLinks.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-slate-400 transition-colors hover:text-slate-100"
+                    className="text-sm text-slate-600 transition-colors hover:text-slate-900"
                   >
                     {link.label}
                   </Link>
@@ -127,7 +129,7 @@ export function Footer() {
 
           {/* Column 3: Resources */}
           <section>
-            <h4 className="text-sm font-semibold text-slate-200">Resources</h4>
+            <h4 className="text-sm font-semibold text-slate-900">Resources</h4>
             <ul className="mt-4 space-y-2.5">
               {resourceLinks.map((link) => (
                 <li key={link.href}>
@@ -135,7 +137,7 @@ export function Footer() {
                     href={link.href}
                     target={link.external ? "_blank" : undefined}
                     rel={link.external ? "noopener noreferrer" : undefined}
-                    className="text-sm text-slate-400 transition-colors hover:text-slate-100"
+                    className="text-sm text-slate-600 transition-colors hover:text-slate-900"
                   >
                     {link.label}
                   </Link>
@@ -146,13 +148,13 @@ export function Footer() {
 
           {/* Column 4: Legal */}
           <section>
-            <h4 className="text-sm font-semibold text-slate-200">Legal</h4>
+            <h4 className="text-sm font-semibold text-slate-900">Legal</h4>
             <ul className="mt-4 space-y-2.5">
               {legalLinks.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-slate-400 transition-colors hover:text-slate-100"
+                    className="text-sm text-slate-600 transition-colors hover:text-slate-900"
                   >
                     {link.label}
                   </Link>
@@ -163,7 +165,7 @@ export function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-12 flex flex-col-reverse items-start justify-between gap-4 border-t border-slate-800/70 pt-7 sm:flex-row sm:items-center">
+        <div className="mt-12 flex flex-col-reverse items-start justify-between gap-4 border-t border-slate-200 pt-7 sm:flex-row sm:items-center">
           <div className="text-xs text-slate-500">
             <p>© 2026 ModelOpt. All rights reserved.</p>
             <p className="mt-0.5">
@@ -172,7 +174,7 @@ export function Footer() {
                 href="https://mohanprasath.dev"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-slate-400 hover:text-slate-100"
+                className="text-slate-600 hover:text-slate-900"
               >
                 Mohan Prasath
               </Link>
@@ -186,7 +188,7 @@ export function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="LinkedIn"
-              className="flex size-8 items-center justify-center rounded-lg border border-slate-800 text-slate-500 transition-colors hover:border-slate-700 hover:text-slate-300"
+              className="flex size-8 items-center justify-center rounded-lg border border-slate-300 text-slate-500 transition-colors hover:border-slate-400 hover:text-slate-700"
             >
               <LinkedinIcon className="size-4" />
             </Link>
@@ -195,7 +197,7 @@ export function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="GitHub"
-              className="flex size-8 items-center justify-center rounded-lg border border-slate-800 text-slate-500 transition-colors hover:border-slate-700 hover:text-slate-300"
+              className="flex size-8 items-center justify-center rounded-lg border border-slate-300 text-slate-500 transition-colors hover:border-slate-400 hover:text-slate-700"
             >
               <GithubIcon className="size-4" />
             </Link>
@@ -204,7 +206,7 @@ export function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Personal website"
-              className="flex size-8 items-center justify-center rounded-lg border border-slate-800 text-slate-500 transition-colors hover:border-slate-700 hover:text-slate-300"
+              className="flex size-8 items-center justify-center rounded-lg border border-slate-300 text-slate-500 transition-colors hover:border-slate-400 hover:text-slate-700"
             >
               <Globe className="size-4" />
             </Link>

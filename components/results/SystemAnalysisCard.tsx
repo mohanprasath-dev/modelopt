@@ -16,14 +16,14 @@ function scoreLabel(score: "green" | "yellow" | "red") {
 
 function scoreStyles(score: "green" | "yellow" | "red") {
   if (score === "green") {
-    return "border-emerald-500/40 bg-emerald-500/10 text-emerald-300"
+    return "border-emerald-200 bg-emerald-50 text-emerald-700"
   }
 
   if (score === "yellow") {
-    return "border-amber-500/40 bg-amber-500/10 text-amber-300"
+    return "border-amber-200 bg-amber-50 text-amber-700"
   }
 
-  return "border-red-500/40 bg-red-500/10 text-red-300"
+  return "border-red-200 bg-red-50 text-red-700"
 }
 
 export function SystemAnalysisCard({
@@ -34,26 +34,26 @@ export function SystemAnalysisCard({
   score,
 }: SystemAnalysisCardProps) {
   return (
-    <section className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 backdrop-blur-md">
+    <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-[0_12px_34px_rgba(15,23,42,0.08)] backdrop-blur-md">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="text-xl font-semibold text-slate-100">System Analysis</h2>
+        <h2 className="text-xl font-semibold text-slate-900">System Analysis</h2>
         <Badge className={scoreStyles(score)}>{scoreLabel(score)}</Badge>
       </div>
 
-      <p className="mt-3 text-sm leading-relaxed text-slate-300">{systemAnalysis}</p>
+      <p className="mt-3 text-sm leading-relaxed text-slate-700">{systemAnalysis}</p>
 
       <dl className="mt-5 grid gap-3 sm:grid-cols-3">
-        <div className="rounded-xl border border-slate-800 bg-slate-950/70 p-3">
+        <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
           <dt className="text-xs uppercase tracking-wide text-slate-500">GPU</dt>
-          <dd className="mt-1 text-sm font-medium text-slate-100">{gpuName}</dd>
+          <dd className="mt-1 text-sm font-medium text-slate-900">{gpuName}</dd>
         </div>
-        <div className="rounded-xl border border-slate-800 bg-slate-950/70 p-3">
+        <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
           <dt className="text-xs uppercase tracking-wide text-slate-500">VRAM</dt>
-          <dd className="mt-1 text-sm font-medium text-slate-100">{vramGb}GB</dd>
+          <dd className="mt-1 text-sm font-medium text-slate-900">{vramGb}GB</dd>
         </div>
-        <div className="rounded-xl border border-slate-800 bg-slate-950/70 p-3">
+        <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
           <dt className="text-xs uppercase tracking-wide text-slate-500">RAM</dt>
-          <dd className="mt-1 text-sm font-medium text-slate-100">{ramGb}GB</dd>
+          <dd className="mt-1 text-sm font-medium text-slate-900">{ramGb}GB</dd>
         </div>
       </dl>
     </section>

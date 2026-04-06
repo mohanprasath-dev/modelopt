@@ -95,8 +95,8 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="en" className={cn("dark font-sans", inter.variable, jetBrainsMono.variable)}>
-      <body className={cn("min-h-screen bg-slate-950", inter.className)}>
+    <html lang="en" className={cn("font-sans", inter.variable, jetBrainsMono.variable)}>
+      <body className={cn("min-h-screen bg-[#f6f8fc] text-slate-900", inter.className)}>
         <Script
           id="schema-organization"
           type="application/ld+json"
@@ -109,7 +109,7 @@ export default function RootLayout({
         />
         <a
           href="#main-content"
-          className="sr-only rounded-md bg-blue-500 px-3 py-2 text-white focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-50"
+          className="sr-only rounded-md bg-blue-600 px-3 py-2 text-white focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-50"
         >
           Skip to content
         </a>

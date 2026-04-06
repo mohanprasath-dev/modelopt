@@ -27,12 +27,14 @@ interface GpuSelectorProps {
   error?: string
 }
 
-const groupOrder = ["NVIDIA", "AMD", "Apple"] as const
+const groupOrder = ["NVIDIA", "AMD", "Apple", "Intel", "Other"] as const
 
 function getManufacturer(displayName: string): (typeof groupOrder)[number] {
   if (displayName.startsWith("NVIDIA")) return "NVIDIA"
   if (displayName.startsWith("AMD")) return "AMD"
-  return "Apple"
+  if (displayName.startsWith("Apple")) return "Apple"
+  if (displayName.startsWith("Intel")) return "Intel"
+  return "Other"
 }
 
 export function GpuSelector({ gpus, value, onChange, error }: GpuSelectorProps) {
@@ -47,6 +49,8 @@ export function GpuSelector({ gpus, value, onChange, error }: GpuSelectorProps) 
       NVIDIA: [],
       AMD: [],
       Apple: [],
+      Intel: [],
+      Other: [],
     }
 
     gpus.forEach((gpu) => {
@@ -59,7 +63,7 @@ export function GpuSelector({ gpus, value, onChange, error }: GpuSelectorProps) 
 
   return (
     <div className="space-y-2">
-      <label htmlFor="gpu-selector" className="text-sm font-medium text-slate-200">
+      <label htmlFor="gpu-selector" className="text-sm font-medium text-slate-700">
         GPU
       </label>
       <Popover open={open} onOpenChange={setOpen}>
@@ -75,41 +79,47 @@ export function GpuSelector({ gpus, value, onChange, error }: GpuSelectorProps) 
               aria-invalid={Boolean(error)}
               aria-describedby={error ? errorId : undefined}
               className={cn(
-                "inline-flex h-11 w-full items-center justify-between rounded-xl border border-slate-700 bg-slate-900 px-3 text-sm text-slate-100 transition-colors hover:bg-slate-800",
+                "inline-flex h-11 w-full items-center justify-between rounded-xl border border-slate-300 bg-white px-3 text-sm text-slate-900 transition-colors hover:bg-slate-50",
                 error && "border-red-500/70"
               )}
             >
               {selectedGpu
                 ? `${selectedGpu.display_name} (${selectedGpu.vram_gb}GB)`
                 : "Select a GPU"}
-              <ChevronsUpDown className="ml-2 size-4 shrink-0 text-slate-400" />
+              <ChevronsUpDown className="ml-2 size-4 shrink-0 text-slate-500" />
             </button>
           }
         />
-        <PopoverContent id={listboxId} className="w-[--anchor-width] border border-slate-700 bg-slate-900 p-0 text-slate-100">
+        <PopoverContent id={listboxId} className="w-[--anchor-width] border border-slate-300 bg-white p-0 text-slate-900 shadow-[0_14px_30px_rgba(15,23,42,0.12)]">
           <Command>
             <CommandInput placeholder="Search GPU..." aria-label="Search GPU" />
             <CommandList>
               <CommandEmpty>No GPU found.</CommandEmpty>
-              {groupOrder.map((group) => (
-                <CommandGroup key={group} heading={group}>
-                  {grouped[group].map((gpu) => (
-                    <CommandItem
-                      key={gpu.id}
-                      value={`${gpu.display_name} ${gpu.id} ${gpu.vram_gb}`}
-                      onSelect={() => {
-                        onChange(gpu.id)
-                        setOpen(false)
-                      }}
-                    >
-                      <div className="flex w-full items-center justify-between gap-3">
-                        <span>{gpu.display_name}</span>
-                        <span className="text-xs text-slate-400">{gpu.vram_gb}GB</span>
-                      </div>
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              ))}
+              {groupOrder.map((group) => {
+                if (grouped[group].length === 0) {
+                  return null
+                }
+
+                return (
+                  <CommandGroup key={group} heading={group}>
+                    {grouped[group].map((gpu) => (
+                      <CommandItem
+                        key={gpu.id}
+                        value={`${gpu.display_name} ${gpu.id} ${gpu.vram_gb}`}
+                        onSelect={() => {
+                          onChange(gpu.id)
+                          setOpen(false)
+                        }}
+                      >
+                        <div className="flex w-full items-center justify-between gap-3">
+                          <span>{gpu.display_name}</span>
+                          <span className="text-xs text-slate-500">{gpu.vram_gb}GB</span>
+                        </div>
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                )
+              })}
             </CommandList>
           </Command>
         </PopoverContent>

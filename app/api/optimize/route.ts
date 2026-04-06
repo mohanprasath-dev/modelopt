@@ -3,12 +3,11 @@ import { z } from "zod"
 import gpusData from "@/lib/data/gpus.json"
 import modelsData from "@/lib/data/models.json"
 
-type Deployment = "local" | "cloud"
-
 interface GpuSpec {
   id: string
   display_name: string
   vram_gb: number
+  memory_type?: "dedicated" | "shared" | "unified"
 }
 
 interface ModelSpec {
@@ -41,7 +40,7 @@ const payloadSchema = z.object({
     .int()
     .min(8, "RAM must be at least 8GB.")
     .max(1024, "RAM value is too large."),
-  vram_gb: z.number().int().positive().optional(),
+  vram_gb: z.number().int().positive(),
   use_cases: z.array(z.string().min(1)).min(1).max(7),
   speed_preference: z.number().int().min(1).max(5),
   deployment: z.enum(["local", "cloud"]),
@@ -49,9 +48,28 @@ const payloadSchema = z.object({
 
 type OptimizePayload = z.infer<typeof payloadSchema>
 
+interface Recommendation {
+  name: string
+  display_name: string
+  reason: string
+  tradeoffs: string
+  ollama_install: string
+  confidence: number
+}
+
+interface RecommendationResult {
+  summary: string
+  warnings: string[]
+  recommendations: Recommendation[]
+}
+
 const MAX_REQUESTS_PER_MINUTE = 10
 const WINDOW_MS = 60_000
+const RATE_LIMIT_ENTRY_TTL_MS = WINDOW_MS * 3
+const BALANCED_SIZE_TARGET_B = 12
+const GEMINI_MODEL = process.env.GEMINI_MODEL ?? "gemini-2.5-flash"
 const rateLimitStore = new Map<string, { count: number; resetAt: number }>()
+let lastRateLimitCleanup = 0
 
 function getClientIp(request: Request): string {
   const forwarded = request.headers.get("x-forwarded-for")
@@ -64,6 +82,16 @@ function getClientIp(request: Request): string {
 
 function checkRateLimit(ip: string): { ok: boolean; retryAfterSec: number; remaining: number } {
   const now = Date.now()
+
+  if (now - lastRateLimitCleanup >= WINDOW_MS) {
+    for (const [storedIp, record] of rateLimitStore.entries()) {
+      if (record.resetAt + RATE_LIMIT_ENTRY_TTL_MS < now) {
+        rateLimitStore.delete(storedIp)
+      }
+    }
+    lastRateLimitCleanup = now
+  }
+
   const existing = rateLimitStore.get(ip)
 
   if (!existing || now > existing.resetAt) {
@@ -112,8 +140,22 @@ function corsHeaders(request: Request): HeadersInit {
 }
 
 function parseSizeB(size: string): number {
-  const match = size.match(/([\d.]+)\s*[bB]/)
+  const match = size.match(/([\d.]+)\s*b/i)
   return match ? Number(match[1]) : 999
+}
+
+function resolveEffectiveVram(vramGb: number, ramGb: number, gpu: GpuSpec): number {
+  if (gpu.memory_type === "shared") {
+    // Shared-memory iGPUs can borrow a fraction of system RAM; cap to keep recommendations realistic.
+    const sharedCeiling = Math.max(gpu.vram_gb, Math.min(16, Math.max(2, Math.floor(ramGb * 0.5))))
+    return Math.min(sharedCeiling, Math.max(1, vramGb))
+  }
+
+  if (gpu.memory_type === "unified") {
+    return Math.min(ramGb, Math.max(1, vramGb))
+  }
+
+  return Math.min(gpu.vram_gb, Math.max(1, vramGb))
 }
 
 function averageTps(model: ModelSpec): number {
@@ -137,10 +179,10 @@ function speedBias(sizeB: number, speedPreference: number): number {
     return sizeB * 1.8
   }
 
-  return -Math.abs(sizeB - 13)
+  return -Math.abs(sizeB - BALANCED_SIZE_TARGET_B)
 }
 
-function rankModels(models: ModelSpec[], payload: Required<OptimizePayload>): ModelSpec[] {
+function rankModels(models: ModelSpec[], payload: OptimizePayload): ModelSpec[] {
   return [...models].sort((a, b) => {
     const overlapA = useCaseOverlap(a.use_cases, payload.use_cases)
     const overlapB = useCaseOverlap(b.use_cases, payload.use_cases)
@@ -177,14 +219,14 @@ function extractJsonBlock(rawText: string): string {
   return trimmed
 }
 
-async function callGemini(payload: Required<OptimizePayload>, candidates: ModelSpec[]) {
+async function callGemini(payload: OptimizePayload, candidates: ModelSpec[]) {
   const apiKey = process.env.GEMINI_API_KEY
   if (!apiKey) {
     throw new Error("Missing GEMINI_API_KEY environment variable.")
   }
 
   const endpoint =
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`
+    `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`
 
   const systemPrompt = [
     "You are ModelOpt, an expert local AI model recommendation engine.",
@@ -255,18 +297,7 @@ async function callGemini(payload: Required<OptimizePayload>, candidates: ModelS
   }
 
   const jsonText = extractJsonBlock(text)
-  return JSON.parse(jsonText) as {
-    summary: string
-    warnings: string[]
-    recommendations: Array<{
-      name: string
-      display_name: string
-      reason: string
-      tradeoffs: string
-      ollama_install: string
-      confidence: number
-    }>
-  }
+  return JSON.parse(jsonText) as RecommendationResult
 }
 
 function fallbackRecommendations(candidates: ModelSpec[], reason: string) {
@@ -287,6 +318,59 @@ function fallbackRecommendations(candidates: ModelSpec[], reason: string) {
       ollama_install: model.ollama_install,
       confidence: index === 0 ? 0.78 : 0.68,
     })),
+  } satisfies RecommendationResult
+}
+
+function sanitizeProviderResult(
+  raw: RecommendationResult,
+  candidates: ModelSpec[]
+): RecommendationResult {
+  const candidateMap = new Map(candidates.map((model) => [model.name, model]))
+  const seen = new Set<string>()
+
+  const recommendations: Recommendation[] = []
+
+  for (const entry of raw.recommendations ?? []) {
+    if (!entry?.name || seen.has(entry.name)) {
+      continue
+    }
+
+    const candidate = candidateMap.get(entry.name)
+    if (!candidate) {
+      continue
+    }
+
+    seen.add(entry.name)
+    recommendations.push({
+      name: candidate.name,
+      display_name: candidate.display_name,
+      reason: entry.reason?.trim() || "Strong fit for your selected hardware and use cases.",
+      tradeoffs: entry.tradeoffs?.trim() || candidate.weaknesses,
+      ollama_install: candidate.ollama_install,
+      confidence:
+        typeof entry.confidence === "number" && Number.isFinite(entry.confidence)
+          ? Math.min(1, Math.max(0, entry.confidence))
+          : 0.7,
+    })
+
+    if (recommendations.length >= 5) {
+      break
+    }
+  }
+
+  if (recommendations.length === 0) {
+    return fallbackRecommendations(
+      candidates,
+      "AI provider response did not include compatible model identifiers."
+    )
+  }
+
+  return {
+    summary: raw.summary?.trim() || "Recommendations generated from compatible candidates.",
+    warnings: Array.isArray(raw.warnings)
+      ? raw.warnings.filter((warning) => Boolean(warning?.trim())).slice(0, 5)
+      : [],
+    recommendations,
   }
 }
 
@@ -360,10 +444,9 @@ export async function POST(request: Request) {
       )
     }
 
-    const normalizedPayload: Required<OptimizePayload> = {
+    const normalizedPayload: OptimizePayload = {
       ...parsed.data,
-      vram_gb: parsed.data.vram_gb ?? gpu.vram_gb,
-      deployment: parsed.data.deployment as Deployment,
+      vram_gb: resolveEffectiveVram(parsed.data.vram_gb, parsed.data.ram_gb, gpu),
     }
 
     const filtered = modelList.filter((model) => {
@@ -399,24 +482,16 @@ export async function POST(request: Request) {
     const ranked = rankModels(filtered, normalizedPayload)
     const topCandidates = ranked.slice(0, 10)
 
-    let geminiResult: {
-      summary: string
-      warnings: string[]
-      recommendations: Array<{
-        name: string
-        display_name: string
-        reason: string
-        tradeoffs: string
-        ollama_install: string
-        confidence: number
-      }>
-    }
+    let geminiResult: RecommendationResult
 
     try {
-      geminiResult = await callGemini(normalizedPayload, topCandidates)
+      const providerResult = await callGemini(normalizedPayload, topCandidates)
+      geminiResult = sanitizeProviderResult(providerResult, topCandidates)
     } catch (providerError) {
       const detail =
-        providerError instanceof Error ? providerError.message : "Gemini provider unavailable."
+        process.env.NODE_ENV === "development" && providerError instanceof Error
+          ? providerError.message
+          : "AI provider temporarily unavailable."
       geminiResult = fallbackRecommendations(topCandidates, detail)
     }
 
@@ -429,7 +504,7 @@ export async function POST(request: Request) {
       considered_models: topCandidates.map((model) => model.name),
       total_compatible_models: filtered.length,
       engine: {
-        model: "gemini-2.0-flash-exp",
+        model: GEMINI_MODEL,
         temperature: 0.3,
       },
     }, {
@@ -442,11 +517,12 @@ export async function POST(request: Request) {
     })
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown server error."
+    const shouldExposeDetails = process.env.NODE_ENV === "development"
 
     return NextResponse.json(
       {
         error: "Unable to process optimization request. Please try again.",
-        details: message,
+        ...(shouldExposeDetails ? { details: message } : {}),
       },
       {
         status: 500,

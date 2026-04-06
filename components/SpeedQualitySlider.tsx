@@ -18,8 +18,8 @@ export function SpeedQualitySlider({ value, onChange, error }: SpeedQualitySlide
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <p className="text-sm font-medium text-slate-200">Speed vs Quality</p>
-        <span className="text-sm text-blue-300">{preferenceLabel(value)}</span>
+        <p className="text-sm font-medium text-slate-700">Speed vs Quality</p>
+        <span className="text-sm text-blue-700">{preferenceLabel(value)}</span>
       </div>
       <Slider
         value={[value]}
@@ -36,7 +36,7 @@ export function SpeedQualitySlider({ value, onChange, error }: SpeedQualitySlide
         }}
         aria-label="Speed versus quality preference"
       />
-      <div className="flex justify-between text-xs text-slate-400">
+      <div className="flex justify-between text-xs text-slate-500">
         <span>1 = Max Speed</span>
         <span>3 = Balanced</span>
         <span>5 = Max Quality</span>

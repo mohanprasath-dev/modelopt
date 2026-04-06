@@ -47,13 +47,13 @@ const articleSchema = {
 
 export default function BlogVramVsRamPage() {
   return (
-    <main className="px-4 py-12 text-slate-100 sm:px-6">
+    <main className="bg-gradient-to-b from-slate-50 via-white to-slate-100/70 px-4 py-12 text-slate-900 sm:px-6">
       <Script
         id="schema-article-vram-ram"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
       />
-      <article className="prose prose-invert mx-auto max-w-3xl">
+      <article className="prose prose-slate mx-auto max-w-3xl">
         <h1>VRAM vs RAM: What Actually Matters</h1>
         <p>VRAM constrains model loading and runtime on local GPUs, while RAM impacts broader system stability and offload paths.</p>
         <p>Local deployments typically fail first on VRAM limits, which is why ModelOpt prioritizes VRAM compatibility checks.</p>

@@ -6,6 +6,8 @@ import { ArrowRight } from "lucide-react"
 import { Hero } from "@/components/Hero"
 import { Features } from "@/components/Features"
 import { HowItWorks } from "@/components/HowItWorks"
+import { TutorialsSection } from "@/components/TutorialsSection"
+import { DiscordSection } from "@/components/DiscordSection"
 import { FAQ } from "@/components/FAQ"
 import { Button } from "@/components/ui/button"
 
@@ -76,14 +78,14 @@ const testimonials = [
 
 const stats = [
   { value: "10,000+", label: "Optimizations Run" },
-  { value: "20+", label: "AI Models Tracked" },
+  { value: "28+", label: "AI Models Tracked" },
   { value: "50+", label: "GPUs Supported" },
   { value: "100%", label: "Free Forever" },
 ]
 
 export default function Home() {
   return (
-    <main className="bg-slate-950 text-slate-100">
+    <main className="bg-[#f6f8fc] text-slate-900">
       <Script
         id="schema-faq-home"
         type="application/ld+json"
@@ -93,12 +95,12 @@ export default function Home() {
       <Hero />
 
       {/* Stats bar */}
-      <section className="border-y border-slate-800/60 bg-slate-900/40 px-4 py-6 sm:px-6" aria-label="Key statistics">
+      <section className="border-y border-slate-200 bg-white/80 px-4 py-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] sm:px-6" aria-label="Key statistics">
         <div className="mx-auto grid w-full max-w-5xl grid-cols-2 gap-4 sm:grid-cols-4">
           {stats.map((stat) => (
             <div key={stat.label} className="text-center">
-              <p className="text-2xl font-extrabold text-blue-300">{stat.value}</p>
-              <p className="mt-0.5 text-xs text-slate-500">{stat.label}</p>
+              <p className="text-2xl font-extrabold text-blue-700">{stat.value}</p>
+              <p className="mt-0.5 text-xs text-slate-600">{stat.label}</p>
             </div>
           ))}
         </div>
@@ -109,18 +111,22 @@ export default function Home() {
 
       {/* Divider */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="h-px bg-gradient-to-r from-transparent via-slate-800 to-transparent" />
+        <div className="h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent" />
       </div>
 
       {/* How It Works */}
       <HowItWorks />
+
+      <TutorialsSection />
+
+      <DiscordSection />
 
       {/* Testimonials */}
       <section className="px-4 py-20 sm:px-6" aria-labelledby="testimonials-title">
         <div className="mx-auto w-full max-w-7xl">
           <h2
             id="testimonials-title"
-            className="mb-10 text-center text-2xl font-bold text-slate-100 sm:text-3xl"
+            className="mb-10 text-center text-2xl font-bold text-slate-900 sm:text-3xl"
           >
             What builders are saying
           </h2>
@@ -128,9 +134,9 @@ export default function Home() {
             {testimonials.map((t, i) => (
               <blockquote
                 key={i}
-                className="rounded-2xl border border-slate-800/80 bg-slate-900/50 p-6 backdrop-blur-sm"
+                className="rounded-2xl border border-slate-200 bg-white p-6 shadow-[0_10px_28px_rgba(15,23,42,0.07)] backdrop-blur-sm"
               >
-                <p className="text-sm leading-relaxed text-slate-300">&ldquo;{t.quote}&rdquo;</p>
+                <p className="text-sm leading-relaxed text-slate-700">&ldquo;{t.quote}&rdquo;</p>
                 <footer className="mt-4 text-xs text-slate-500">— {t.author}</footer>
               </blockquote>
             ))}
@@ -140,7 +146,7 @@ export default function Home() {
 
       {/* Divider */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="h-px bg-gradient-to-r from-transparent via-slate-800 to-transparent" />
+        <div className="h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent" />
       </div>
 
       {/* FAQ */}
@@ -148,24 +154,24 @@ export default function Home() {
 
       {/* Internal links cluster */}
       <section className="px-4 pb-8 sm:px-6" aria-label="Explore model optimization guides">
-        <div className="mx-auto flex w-full max-w-4xl flex-wrap justify-center gap-2 text-sm text-slate-400">
-          <Link href="/docs/getting-started" className="rounded-full border border-slate-700 px-3 py-1.5 hover:border-blue-500/40 hover:text-slate-200">Getting started with ModelOpt</Link>
-          <Link href="/docs/model-comparison" className="rounded-full border border-slate-700 px-3 py-1.5 hover:border-blue-500/40 hover:text-slate-200">Model comparison chart</Link>
-          <Link href="/blog/vram-vs-ram" className="rounded-full border border-slate-700 px-3 py-1.5 hover:border-blue-500/40 hover:text-slate-200">VRAM vs RAM guide</Link>
-          <Link href="/blog/quantization-explained" className="rounded-full border border-slate-700 px-3 py-1.5 hover:border-blue-500/40 hover:text-slate-200">Quantization guide</Link>
+        <div className="mx-auto flex w-full max-w-4xl flex-wrap justify-center gap-2 text-sm text-slate-600">
+          <Link href="/docs/getting-started" className="rounded-full border border-slate-300 bg-white px-3 py-1.5 hover:border-blue-300 hover:text-slate-900">Getting started with ModelOpt</Link>
+          <Link href="/docs/model-comparison" className="rounded-full border border-slate-300 bg-white px-3 py-1.5 hover:border-blue-300 hover:text-slate-900">Model comparison chart</Link>
+          <Link href="/blog/vram-vs-ram" className="rounded-full border border-slate-300 bg-white px-3 py-1.5 hover:border-blue-300 hover:text-slate-900">VRAM vs RAM guide</Link>
+          <Link href="/blog/quantization-explained" className="rounded-full border border-slate-300 bg-white px-3 py-1.5 hover:border-blue-300 hover:text-slate-900">Quantization guide</Link>
         </div>
       </section>
 
       {/* CTA Banner */}
       <section className="px-4 py-20 sm:px-6">
-        <div className="relative mx-auto w-full max-w-4xl overflow-hidden rounded-3xl border border-blue-500/25 bg-gradient-to-br from-blue-500/10 via-slate-900/80 to-slate-900 p-10 text-center sm:p-14">
+        <div className="relative mx-auto w-full max-w-4xl overflow-hidden rounded-3xl border border-blue-200 bg-gradient-to-br from-white via-blue-50/70 to-slate-50 p-10 text-center shadow-[0_24px_48px_rgba(15,23,42,0.1)] sm:p-14">
           {/* Glow */}
-          <div className="pointer-events-none absolute -inset-[1px] rounded-3xl bg-gradient-to-br from-blue-500/20 via-transparent to-transparent opacity-60 blur-xl" />
+          <div className="pointer-events-none absolute -inset-[1px] rounded-3xl bg-gradient-to-br from-blue-300/30 via-transparent to-transparent opacity-70 blur-xl" />
           <div className="relative">
-            <h2 className="text-3xl font-extrabold tracking-tight text-slate-100 sm:text-4xl">
+            <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
               Ready to find your perfect model?
             </h2>
-            <p className="mx-auto mt-4 max-w-xl text-slate-400">
+            <p className="mx-auto mt-4 max-w-xl text-slate-600">
               No sign-up required. Enter your hardware, pick your use cases, and get Gemini-powered
               recommendations in seconds.
             </p>
@@ -173,7 +179,7 @@ export default function Home() {
               <Link href="/app">
                 <Button
                   size="lg"
-                  className="h-12 rounded-xl border border-blue-400/40 bg-blue-500 px-8 text-base font-semibold text-white shadow-[0_0_35px_rgba(59,130,246,0.4)] hover:bg-blue-400 hover:shadow-[0_0_50px_rgba(59,130,246,0.55)]"
+                  className="h-12 rounded-xl border border-blue-300 bg-blue-600 px-8 text-base font-semibold text-white shadow-[0_12px_30px_rgba(37,99,235,0.3)] hover:bg-blue-500 hover:shadow-[0_16px_35px_rgba(37,99,235,0.34)]"
                 >
                   Optimize My Setup
                   <ArrowRight className="ml-2 size-4" />

@@ -84,20 +84,20 @@ const socials = [
 
 export default function AboutPage() {
   return (
-    <main className="min-h-screen bg-slate-950 px-4 py-14 text-slate-100 sm:px-6">
+    <main className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-slate-100/80 px-4 py-14 text-slate-900 sm:px-6">
       <div className="mx-auto w-full max-w-5xl space-y-10">
         {/* Hero section */}
-        <section className="relative overflow-hidden rounded-3xl border border-slate-800/80 bg-gradient-to-br from-blue-500/8 via-slate-900/80 to-slate-900 p-8 sm:p-12">
-          <div className="pointer-events-none absolute -inset-[1px] rounded-3xl bg-gradient-to-br from-blue-500/20 via-transparent to-transparent opacity-50 blur-xl" />
+        <section className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-blue-50 via-white to-slate-100 p-8 shadow-[0_24px_80px_rgba(15,23,42,0.08)] sm:p-12">
+          <div className="pointer-events-none absolute -inset-[1px] rounded-3xl bg-gradient-to-br from-blue-200/35 via-transparent to-transparent opacity-70 blur-xl" />
           <div className="relative">
-            <Badge className="border-blue-500/30 bg-blue-500/10 text-blue-300">
+            <Badge className="border-blue-200 bg-blue-50 text-blue-700">
               About ModelOpt
             </Badge>
             <h1 className="mt-4 text-3xl font-extrabold tracking-tight sm:text-4xl">
               AI model recommendations{" "}
               <span className="gradient-text">with transparent logic</span>
             </h1>
-            <p className="mt-4 max-w-2xl text-slate-300">
+            <p className="mt-4 max-w-2xl text-slate-600">
               ModelOpt helps developers and teams pick the right model for local and cloud
               inference. We combine deterministic hardware filtering with Gemini-assisted
               recommendation reasoning — so you always know why a model was chosen.
@@ -107,20 +107,20 @@ export default function AboutPage() {
 
         {/* Mission & How It Works */}
         <section className="grid gap-5 md:grid-cols-2">
-          <Card className="border-slate-800/80 bg-slate-900/50">
+          <Card className="border-slate-200 bg-white/95 shadow-[0_12px_36px_rgba(15,23,42,0.06)]">
             <CardHeader>
-              <CardTitle className="text-slate-100">Mission</CardTitle>
+              <CardTitle className="text-slate-900">Mission</CardTitle>
             </CardHeader>
-            <CardContent className="text-slate-400">
+            <CardContent className="text-slate-600">
               Remove guesswork from AI model selection and make local AI accessible for every
               hardware tier — from a 16GB laptop to a multi-GPU workstation.
             </CardContent>
           </Card>
-          <Card className="border-slate-800/80 bg-slate-900/50">
+          <Card className="border-slate-200 bg-white/95 shadow-[0_12px_36px_rgba(15,23,42,0.06)]">
             <CardHeader>
-              <CardTitle className="text-slate-100">How ModelOpt Works</CardTitle>
+              <CardTitle className="text-slate-900">How ModelOpt Works</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-2 text-sm text-slate-400">
+            <CardContent className="space-y-2 text-sm text-slate-600">
               {[
                 "Validate GPU, RAM, VRAM, use-case, and preference inputs.",
                 "Filter models based on hardware compatibility rules.",
@@ -128,7 +128,7 @@ export default function AboutPage() {
                 "Generate final recommendation narrative with Gemini.",
               ].map((step, i) => (
                 <div key={i} className="flex items-start gap-2">
-                  <Check className="mt-0.5 size-3.5 shrink-0 text-blue-400" />
+                  <Check className="mt-0.5 size-3.5 shrink-0 text-blue-600" />
                   <span>{step}</span>
                 </div>
               ))}
@@ -138,12 +138,12 @@ export default function AboutPage() {
 
         {/* Principles */}
         <section>
-          <h2 className="mb-5 text-xl font-bold text-slate-100">Our Principles</h2>
+          <h2 className="mb-5 text-xl font-bold text-slate-900">Our Principles</h2>
           <div className="grid gap-4 lg:grid-cols-3">
             {principles.map((p) => (
               <SpotlightCard key={p.title} className="p-5">
-                <h3 className="mb-2 font-semibold text-slate-100">{p.title}</h3>
-                <p className="text-sm text-slate-400">{p.content}</p>
+                <h3 className="mb-2 font-semibold text-slate-900">{p.title}</h3>
+                <p className="text-sm text-slate-600">{p.content}</p>
               </SpotlightCard>
             ))}
           </div>
@@ -151,13 +151,13 @@ export default function AboutPage() {
 
         {/* Tech Stack */}
         <section>
-          <h2 className="mb-4 text-xl font-bold text-slate-100">Tech Stack</h2>
+          <h2 className="mb-4 text-xl font-bold text-slate-900">Tech Stack</h2>
           <div className="flex flex-wrap gap-2">
             {techStack.map((tech) => (
               <Badge
                 key={tech}
                 variant="outline"
-                className="border-slate-700 bg-slate-800/60 text-slate-300"
+                className="border-slate-200 bg-white text-slate-700"
               >
                 {tech}
               </Badge>
@@ -166,13 +166,13 @@ export default function AboutPage() {
         </section>
 
         {/* Creator */}
-        <section className="rounded-3xl border border-slate-800/80 bg-slate-900/50 p-7 sm:p-10">
-          <Badge className="border-slate-700 bg-slate-800/60 text-slate-400">Creator</Badge>
-          <h2 className="mt-4 text-2xl font-bold text-slate-100">Built by Mohan Prasath</h2>
-          <p className="mt-3 max-w-2xl text-slate-300">
+        <section className="rounded-3xl border border-slate-200 bg-white/95 p-7 shadow-[0_24px_70px_rgba(15,23,42,0.07)] sm:p-10">
+          <Badge className="border-slate-200 bg-white text-slate-600">Creator</Badge>
+          <h2 className="mt-4 text-2xl font-bold text-slate-900">Built by Mohan Prasath</h2>
+          <p className="mt-3 max-w-2xl text-slate-600">
             Hi, I&apos;m Mohan Prasath — a full-stack AI engineer focused on practical developer
             tools and production-grade AI systems. I&apos;m currently studying at{" "}
-            <strong className="text-slate-100">B.S.A. Crescent Institute</strong> and building
+            <strong className="text-slate-900">B.S.A. Crescent Institute</strong> and building
             projects at the intersection of LLMs, developer tooling, and hardware constraints.
           </p>
           <div className="mt-7 grid gap-4 sm:grid-cols-3">
@@ -186,8 +186,8 @@ export default function AboutPage() {
                     rel="noopener noreferrer"
                     className="block p-4 transition-colors"
                   >
-                    <div className="flex items-center gap-2 text-slate-100">
-                      <Icon className="size-4 text-blue-400" />
+                    <div className="flex items-center gap-2 text-slate-900">
+                      <Icon className="size-4 text-blue-600" />
                       <span className="font-semibold">{social.label}</span>
                     </div>
                     <p className="mt-2 text-xs text-slate-500">{social.desc}</p>

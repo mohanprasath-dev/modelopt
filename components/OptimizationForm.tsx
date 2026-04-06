@@ -17,7 +17,34 @@ import { UseCaseChips } from "@/components/UseCaseChips"
 import { SpeedQualitySlider } from "@/components/SpeedQualitySlider"
 import { DeploymentToggle } from "@/components/DeploymentToggle"
 
-const gpuOptions = gpusData.gpus
+type GpuMemoryType = "dedicated" | "shared" | "unified"
+
+interface GpuCatalogEntry {
+  id: string
+  display_name: string
+  vram_gb: number
+  memory_type?: GpuMemoryType
+}
+
+const gpuOptions = gpusData.gpus as GpuCatalogEntry[]
+
+const SHARED_MEMORY_MAX_VRAM_GB = 16
+
+function getSharedMemoryVramCeiling(ramGb: number, gpuVramGb: number): number {
+  return Math.max(gpuVramGb, Math.min(SHARED_MEMORY_MAX_VRAM_GB, Math.max(2, Math.floor(ramGb * 0.5))))
+}
+
+function getVramCeilingForGpu(gpu: GpuCatalogEntry, ramGb: number): number {
+  if (gpu.memory_type === "shared") {
+    return getSharedMemoryVramCeiling(ramGb, gpu.vram_gb)
+  }
+
+  if (gpu.memory_type === "unified") {
+    return Math.max(1, ramGb)
+  }
+
+  return gpu.vram_gb
+}
 
 type Deployment = "local" | "cloud"
 
@@ -42,11 +69,13 @@ const formSchema = baseSchema.superRefine((data, ctx) => {
     return
   }
 
-  if (data.vram_gb > selectedGpu.vram_gb) {
+  const vramCeiling = getVramCeilingForGpu(selectedGpu, data.ram_gb)
+
+  if (data.vram_gb > vramCeiling) {
     ctx.addIssue({
       path: ["vram_gb"],
       code: z.ZodIssueCode.custom,
-      message: `VRAM override must be less than or equal to ${selectedGpu.vram_gb}GB.`,
+      message: `VRAM override must be less than or equal to ${vramCeiling}GB for this system profile.`,
     })
   }
 })
@@ -106,6 +135,11 @@ export function OptimizationForm({ initialValues, onProgressChange, onDraftChang
   })
 
   const selectedGpuId = watch("gpu")
+  const watchedRam = watch("ram_gb")
+  const selectedGpu = React.useMemo(
+    () => gpuOptions.find((gpu) => gpu.id === selectedGpuId),
+    [selectedGpuId]
+  )
 
   React.useEffect(() => {
     reset(mergedDefaults)
@@ -146,13 +180,23 @@ export function OptimizationForm({ initialValues, onProgressChange, onDraftChang
   }, [watchedValues, onProgressChange, onDraftChange])
 
   React.useEffect(() => {
-    if (!selectedGpuId) return
-
-    const selectedGpu = gpuOptions.find((gpu) => gpu.id === selectedGpuId)
-    if (!selectedGpu) return
+    if (!selectedGpuId || !selectedGpu) {
+      return
+    }
 
     setValue("vram_gb", selectedGpu.vram_gb, { shouldValidate: true })
-  }, [selectedGpuId, setValue])
+  }, [selectedGpuId, selectedGpu, setValue])
+
+  React.useEffect(() => {
+    if (!selectedGpu || selectedGpu.memory_type === "dedicated") {
+      return
+    }
+
+    const nextRam = watchedRam ?? 8
+    const recommendedVram = getVramCeilingForGpu(selectedGpu, nextRam)
+
+    setValue("vram_gb", recommendedVram, { shouldValidate: true })
+  }, [selectedGpu, watchedRam, setValue])
 
   const submit = async (data: OptimizationFormData) => {
     setSubmitError(null)
@@ -189,8 +233,16 @@ export function OptimizationForm({ initialValues, onProgressChange, onDraftChang
         throw new Error(detailedMessage ?? payload?.error ?? "Unable to optimize your setup right now.")
       }
 
-      const payload = (await response.json()) as unknown
-      sessionStorage.setItem("modelopt_last_result", JSON.stringify(payload))
+      const payload = (await response.json()) as Record<string, unknown>
+      sessionStorage.setItem(
+        "modelopt_last_result",
+        JSON.stringify({
+          ...payload,
+          meta: {
+            generated_at: new Date().toISOString(),
+          },
+        })
+      )
 
       toast.success("Optimization complete. Redirecting to results...")
       router.push("/results")
@@ -214,8 +266,8 @@ export function OptimizationForm({ initialValues, onProgressChange, onDraftChang
   return (
     <div className="relative">
       {isSubmitting ? (
-        <div className="absolute inset-0 z-10 flex items-center justify-center rounded-2xl bg-slate-950/70 backdrop-blur-sm" aria-live="polite" aria-busy="true">
-          <div className="flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 text-sm text-slate-200">
+        <div className="absolute inset-0 z-10 flex items-center justify-center rounded-2xl bg-white/70 backdrop-blur-sm" aria-live="polite" aria-busy="true">
+          <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 shadow-[0_10px_28px_rgba(15,23,42,0.1)]">
             <Loader2 className="size-4 animate-spin" />
             Optimizing your setup...
           </div>
@@ -256,7 +308,7 @@ export function OptimizationForm({ initialValues, onProgressChange, onDraftChang
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="vram-override" className="text-sm font-medium text-slate-200">
+          <label htmlFor="vram-override" className="text-sm font-medium text-slate-700">
             VRAM Override (Optional)
           </label>
           <Controller
@@ -267,17 +319,28 @@ export function OptimizationForm({ initialValues, onProgressChange, onDraftChang
                 id="vram-override"
                 type="number"
                 min={1}
+                max={
+                  selectedGpu
+                    ? getVramCeilingForGpu(selectedGpu, watchedRam ?? 8)
+                    : undefined
+                }
                 value={field.value}
                 onChange={(event) => field.onChange(Number(event.target.value))}
                 onBlur={field.onBlur}
                 name={field.name}
-                className="h-11 rounded-xl border-slate-700 bg-slate-900 text-slate-100"
+                className="h-11 rounded-xl border-slate-300 bg-white text-slate-900"
                 aria-invalid={errors.vram_gb ? "true" : "false"}
                 aria-describedby={errors.vram_gb?.message ? vramErrorId : undefined}
               />
             )}
           />
-          <p className="text-xs text-slate-500">Leave auto-filled unless you know better.</p>
+          <p className="text-xs text-slate-500">
+            {selectedGpu?.memory_type === "shared"
+              ? "Integrated GPU detected. Shared-memory systems can borrow from RAM, and this ceiling auto-adjusts up to 16GB based on system RAM."
+              : selectedGpu?.memory_type === "unified"
+                ? "Unified-memory device detected. Effective model memory tracks available system RAM."
+                : "Leave auto-filled unless you know better."}
+          </p>
           {errors.vram_gb?.message ? <p id={vramErrorId} className="text-sm text-red-400">{errors.vram_gb.message}</p> : null}
         </div>
 
@@ -317,12 +380,12 @@ export function OptimizationForm({ initialValues, onProgressChange, onDraftChang
         />
 
         {submitError ? (
-          <div className="rounded-xl border border-red-500/40 bg-red-500/10 p-4">
-            <p id={submitErrorId} className="text-sm text-red-200">{submitError}</p>
+          <div className="rounded-xl border border-red-300 bg-red-50 p-4">
+            <p id={submitErrorId} className="text-sm text-red-700">{submitError}</p>
             <Button
               type="button"
               variant="outline"
-              className="mt-3 border-red-400/40 text-red-200 hover:bg-red-500/10"
+              className="mt-3 border-red-300 bg-white text-red-700 hover:bg-red-100"
               onClick={() => handleSubmit(submit, onInvalid)()}
             >
               <RotateCcw className="mr-2 size-4" />
@@ -331,11 +394,11 @@ export function OptimizationForm({ initialValues, onProgressChange, onDraftChang
           </div>
         ) : null}
 
-        <div className="sticky bottom-3 z-10 -mx-1 rounded-xl border border-slate-700/70 bg-slate-950/80 p-2 backdrop-blur sm:static sm:mx-0 sm:border-0 sm:bg-transparent sm:p-0">
+        <div className="sticky bottom-3 z-10 -mx-1 rounded-xl border border-slate-200 bg-white/90 p-2 shadow-[0_12px_30px_rgba(15,23,42,0.08)] backdrop-blur sm:static sm:mx-0 sm:border-0 sm:bg-transparent sm:p-0 sm:shadow-none">
           <Button
             type="submit"
             size="lg"
-            className="h-12 w-full rounded-xl bg-blue-500 text-base font-semibold text-white shadow-[0_0_30px_rgba(59,130,246,0.35)] hover:bg-blue-400 disabled:cursor-not-allowed disabled:opacity-50"
+            className="h-12 w-full rounded-xl bg-blue-600 text-base font-semibold text-white shadow-[0_12px_26px_rgba(37,99,235,0.3)] hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
             disabled={!isValid || isSubmitting}
             aria-describedby={submitError ? submitErrorId : undefined}
           >

@@ -23,6 +23,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/blog/how-to-choose-right-model", changeFrequency: "monthly", priority: 0.72 },
     { path: "/blog/vram-vs-ram", changeFrequency: "monthly", priority: 0.72 },
     { path: "/blog/quantization-explained", changeFrequency: "monthly", priority: 0.72 },
+    { path: "/tutorials", changeFrequency: "weekly", priority: 0.76 },
+    { path: "/discord", changeFrequency: "weekly", priority: 0.68 },
     { path: "/privacy", changeFrequency: "monthly", priority: 0.4 },
     { path: "/terms", changeFrequency: "monthly", priority: 0.4 },
     { path: "/cookies", changeFrequency: "monthly", priority: 0.4 },

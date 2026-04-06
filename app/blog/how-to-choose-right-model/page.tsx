@@ -47,13 +47,13 @@ const articleSchema = {
 
 export default function BlogHowToChoosePage() {
   return (
-    <main className="px-4 py-12 text-slate-100 sm:px-6">
+    <main className="bg-gradient-to-b from-slate-50 via-white to-slate-100/70 px-4 py-12 text-slate-900 sm:px-6">
       <Script
         id="schema-article-choose-model"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
       />
-      <article className="prose prose-invert mx-auto max-w-3xl">
+      <article className="prose prose-slate mx-auto max-w-3xl">
         <h1>How to Choose the Right AI Model for Your GPU</h1>
         <p>Start with VRAM and RAM limits, then optimize for your use-case and latency tolerance.</p>
         <p>ModelOpt automates this by filtering compatibility first and adding recommendation reasoning second.</p>

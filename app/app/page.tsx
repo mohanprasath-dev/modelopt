@@ -90,31 +90,31 @@ export default function AppDashboardPage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-950 px-4 py-8 text-slate-100 sm:px-6 sm:py-10">
+    <main className="min-h-screen bg-[#f6f8fc] px-4 py-8 text-slate-900 sm:px-6 sm:py-10">
       <div className="mx-auto grid w-full max-w-7xl gap-5 lg:grid-cols-[280px_1fr]">
         <aside className="space-y-4">
-          <section className="rounded-2xl border border-slate-800 bg-slate-900/60 p-4">
-            <p className="inline-flex items-center gap-2 text-sm text-blue-300">
+          <section className="rounded-2xl border border-slate-200 bg-white p-4 shadow-[0_10px_24px_rgba(15,23,42,0.07)]">
+            <p className="inline-flex items-center gap-2 text-sm text-blue-700">
               <LayoutDashboard className="size-4" /> Optimization Progress
             </p>
             <h2 className="mt-2 text-2xl font-semibold">{progress.percentage}% complete</h2>
-            <div className="mt-3 h-2 rounded-full bg-slate-800">
+            <div className="mt-3 h-2 rounded-full bg-slate-200">
               <div
                 className="h-2 rounded-full bg-blue-500 transition-all"
                 style={{ width: `${progress.percentage}%` }}
                 aria-hidden="true"
               />
             </div>
-            <p className="mt-2 text-xs text-slate-400">
+            <p className="mt-2 text-xs text-slate-600">
               {progress.completed} of {progress.total} required fields ready.
             </p>
           </section>
 
-          <section className="rounded-2xl border border-slate-800 bg-slate-900/60 p-4">
-            <p className="inline-flex items-center gap-2 text-sm text-blue-300">
+          <section className="rounded-2xl border border-slate-200 bg-white p-4 shadow-[0_10px_24px_rgba(15,23,42,0.07)]">
+            <p className="inline-flex items-center gap-2 text-sm text-blue-700">
               <BookmarkPlus className="size-4" /> Saved Configurations
             </p>
-            <Button type="button" onClick={saveCurrentDraft} className="mt-3 w-full bg-blue-500 text-white hover:bg-blue-400">
+            <Button type="button" onClick={saveCurrentDraft} className="mt-3 w-full bg-blue-600 text-white hover:bg-blue-500">
               Save Current Draft
             </Button>
             <div className="mt-3 space-y-2">
@@ -126,9 +126,9 @@ export default function AppDashboardPage() {
                     key={config.id}
                     type="button"
                     onClick={() => loadConfig(config.id)}
-                    className="w-full rounded-lg border border-slate-700 bg-slate-950/60 px-3 py-2 text-left text-sm hover:border-blue-500/50"
+                    className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-left text-sm hover:border-blue-300"
                   >
-                    <p className="font-medium text-slate-200">{config.name}</p>
+                    <p className="font-medium text-slate-900">{config.name}</p>
                     <p className="mt-1 inline-flex items-center gap-1 text-xs text-slate-500">
                       <Clock3 className="size-3" /> {new Date(config.createdAt).toLocaleDateString()}
                     </p>
@@ -138,11 +138,11 @@ export default function AppDashboardPage() {
             </div>
           </section>
 
-          <section className="rounded-2xl border border-slate-800 bg-slate-900/60 p-4">
-            <p className="inline-flex items-center gap-2 text-sm text-blue-300">
+          <section className="rounded-2xl border border-slate-200 bg-white p-4 shadow-[0_10px_24px_rgba(15,23,42,0.07)]">
+            <p className="inline-flex items-center gap-2 text-sm text-blue-700">
               <Sparkles className="size-4" /> Workflow
             </p>
-            <ol className="mt-3 space-y-2 text-sm text-slate-300">
+            <ol className="mt-3 space-y-2 text-sm text-slate-700">
               <li>1. Fill hardware profile</li>
               <li>2. Set optimization goals</li>
               <li>3. Review ranked recommendations</li>
@@ -150,10 +150,10 @@ export default function AppDashboardPage() {
           </section>
         </aside>
 
-        <section className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 shadow-2xl backdrop-blur-xl sm:p-8">
-          <p className="text-sm font-medium text-blue-300">SaaS Optimizer</p>
+        <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-[0_20px_44px_rgba(15,23,42,0.1)] backdrop-blur-xl sm:p-8">
+          <p className="text-sm font-medium text-blue-700">SaaS Optimizer</p>
           <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">Optimization Dashboard</h1>
-          <p className="mt-3 text-base leading-relaxed text-slate-400">
+          <p className="mt-3 text-base leading-relaxed text-slate-600">
             Enter your hardware and preferences to get ranked model recommendations.
           </p>
 
@@ -167,7 +167,7 @@ export default function AppDashboardPage() {
         </section>
       </div>
 
-      <Toaster richColors theme="dark" position="top-right" />
+      <Toaster richColors theme="light" position="top-right" />
     </main>
   )
 }

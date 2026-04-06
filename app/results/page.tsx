@@ -30,6 +30,9 @@ interface OptimizeApiResult {
     deployment: "local" | "cloud"
   }
   summary: string
+  meta?: {
+    generated_at?: string
+  }
   warnings?: string[]
   recommendations?: Array<{
     name: string
@@ -44,6 +47,7 @@ interface ModelSpec {
   display_name: string
   size: string
   vram_min_gb: number
+  ram_min_gb: number
   use_cases: string[]
   quantizations: string[]
   context_window: number
@@ -72,12 +76,24 @@ interface CompareModel {
   est_speed_tps: number
 }
 
-const modelLookup = new Map((modelsData.models as ModelSpec[]).map((item) => [item.name, item]))
+const modelCatalog = modelsData.models as ModelSpec[]
+const modelLookup = new Map(modelCatalog.map((item) => [item.name, item]))
 const gpuLookup = new Map(gpusData.gpus.map((item) => [item.id, item]))
+const MAX_RESULT_AGE_MS = 12 * 60 * 60 * 1000
 
 function averageSpeed(model: ModelSpec): number {
   const tps = model.tokens_per_sec_estimate
   return (tps.rtx_4090 + tps.rtx_4070 + tps.rtx_3060 + tps.apple_m2) / 4
+}
+
+const modelSpeedLookup = new Map(modelCatalog.map((model) => [model.name, averageSpeed(model)]))
+
+function useCaseOverlapScore(modelUseCases: string[], requestedUseCases: string[]): number {
+  const requested = new Set(requestedUseCases.map((item) => item.toLowerCase()))
+  return modelUseCases.reduce(
+    (count, useCase) => (requested.has(useCase.toLowerCase()) ? count + 1 : count),
+    0
+  )
 }
 
 function buildCardData(result: OptimizeApiResult): RecommendationCardData[] {
@@ -97,7 +113,7 @@ function buildCardData(result: OptimizeApiResult): RecommendationCardData[] {
         display_name: dbModel.display_name,
         size: dbModel.size,
         reasoning: entry.reason,
-        tokens_per_sec_estimate: averageSpeed(dbModel),
+        tokens_per_sec_estimate: modelSpeedLookup.get(dbModel.name) ?? averageSpeed(dbModel),
         context_window: dbModel.context_window,
         recommended_quantization: dbModel.quantizations[0] ?? "Q4_K_M",
         ollama_install: dbModel.ollama_install,
@@ -113,10 +129,22 @@ function buildCardData(result: OptimizeApiResult): RecommendationCardData[] {
 function buildAlternativeModels(result: OptimizeApiResult): AlternativeModel[] {
   const used = new Set((result.recommendations ?? []).slice(0, 3).map((entry) => entry.name))
 
-  return (modelsData.models as ModelSpec[])
+  return modelCatalog
     .filter((model) => !used.has(model.name))
+    .filter((model) => model.ram_min_gb <= result.input.ram_gb)
     .filter((model) => result.input.deployment === "cloud" || model.vram_min_gb <= result.input.vram_gb)
     .filter((model) => model.use_cases.length > 0)
+    .sort((a, b) => {
+      const overlapDiff =
+        useCaseOverlapScore(b.use_cases, result.input.use_cases) -
+        useCaseOverlapScore(a.use_cases, result.input.use_cases)
+
+      if (overlapDiff !== 0) {
+        return overlapDiff
+      }
+
+      return (modelSpeedLookup.get(b.name) ?? 0) - (modelSpeedLookup.get(a.name) ?? 0)
+    })
     .slice(0, 20)
     .map((model) => ({
       name: model.name,
@@ -124,7 +152,7 @@ function buildAlternativeModels(result: OptimizeApiResult): AlternativeModel[] {
       size: model.size,
       vram_min_gb: model.vram_min_gb,
       use_cases: model.use_cases,
-      est_speed_tps: averageSpeed(model),
+      est_speed_tps: modelSpeedLookup.get(model.name) ?? averageSpeed(model),
     }))
 }
 
@@ -170,8 +198,19 @@ export default function ResultsPage() {
         throw new Error("Invalid result payload")
       }
 
+      const generatedAtIso = parsed.meta?.generated_at
+      if (generatedAtIso) {
+        const generatedAtMs = Number(new Date(generatedAtIso))
+        if (!Number.isNaN(generatedAtMs) && Date.now() - generatedAtMs > MAX_RESULT_AGE_MS) {
+          sessionStorage.removeItem("modelopt_last_result")
+          throw new Error("Saved results expired")
+        }
+        setGeneratedAt(new Date(generatedAtIso).toLocaleString())
+      } else {
+        setGeneratedAt(new Date().toLocaleString())
+      }
+
       setResult(parsed)
-      setGeneratedAt(new Date().toLocaleString())
     } catch (loadError) {
       console.error(loadError)
       setError("We could not load your results. Please optimize again.")
@@ -196,7 +235,7 @@ export default function ResultsPage() {
 
   const comparePool = React.useMemo(() => {
     return new Map<string, CompareModel>(
-      (modelsData.models as ModelSpec[]).map((model) => [
+      modelCatalog.map((model) => [
         model.name,
         {
           name: model.name,
@@ -205,7 +244,7 @@ export default function ResultsPage() {
           vram_min_gb: model.vram_min_gb,
           context_window: model.context_window,
           use_cases: model.use_cases,
-          est_speed_tps: averageSpeed(model),
+          est_speed_tps: modelSpeedLookup.get(model.name) ?? averageSpeed(model),
         },
       ])
     )
@@ -254,7 +293,7 @@ export default function ResultsPage() {
 
   if (loading) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-slate-950 px-6 text-slate-200">
+      <main className="flex min-h-screen items-center justify-center bg-[#f6f8fc] px-6 text-slate-700">
         <p>Loading your optimized stack...</p>
       </main>
     )
@@ -262,12 +301,12 @@ export default function ResultsPage() {
 
   if (error) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-slate-950 px-6 text-slate-100">
-        <section className="w-full max-w-lg rounded-2xl border border-slate-800 bg-slate-900/60 p-6 text-center">
+      <main className="flex min-h-screen items-center justify-center bg-[#f6f8fc] px-6 text-slate-900">
+        <section className="w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-[0_16px_36px_rgba(15,23,42,0.1)]">
           <h1 className="text-2xl font-bold">No results found</h1>
-          <p className="mt-3 text-slate-400">{error}</p>
+          <p className="mt-3 text-slate-600">{error}</p>
           <div className="mt-5 flex justify-center gap-3">
-            <Button onClick={() => router.push("/app")} className="bg-blue-500 text-white hover:bg-blue-400">
+            <Button onClick={() => router.push("/app")} className="bg-blue-600 text-white hover:bg-blue-500">
               Go to Optimizer
             </Button>
             <Button variant="outline" onClick={() => void loadData()}>
@@ -281,12 +320,12 @@ export default function ResultsPage() {
 
   if (!result) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-slate-950 px-6 text-slate-100">
-        <section className="w-full max-w-lg rounded-2xl border border-slate-800 bg-slate-900/60 p-6 text-center">
+      <main className="flex min-h-screen items-center justify-center bg-[#f6f8fc] px-6 text-slate-900">
+        <section className="w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-[0_16px_36px_rgba(15,23,42,0.1)]">
           <h1 className="text-2xl font-bold">No results found</h1>
-          <p className="mt-3 text-slate-400">Redirecting to optimizer...</p>
+          <p className="mt-3 text-slate-600">Redirecting to optimizer...</p>
           <div className="mt-5">
-            <Button onClick={() => router.push("/app")} className="bg-blue-500 text-white hover:bg-blue-400">
+            <Button onClick={() => router.push("/app")} className="bg-blue-600 text-white hover:bg-blue-500">
               Back to Optimizer
             </Button>
           </div>
@@ -320,7 +359,11 @@ export default function ResultsPage() {
     .filter((model): model is CompareModel => Boolean(model))
 
   const share = async () => {
-    await navigator.clipboard.writeText(window.location.href)
+    try {
+      await navigator.clipboard.writeText(window.location.href)
+    } catch {
+      window.prompt("Copy this link", window.location.href)
+    }
   }
 
   const startOver = () => {
@@ -354,7 +397,7 @@ export default function ResultsPage() {
   }
 
   return (
-    <main className="min-h-screen overflow-x-clip bg-slate-950 px-3 py-8 text-slate-100 print:bg-white print:px-0 print:py-0 print:text-slate-900 sm:px-8 sm:py-10">
+    <main className="min-h-screen overflow-x-clip bg-[#f6f8fc] px-3 py-8 text-slate-900 print:bg-white print:px-0 print:py-0 print:text-slate-900 sm:px-8 sm:py-10">
       <div className="mx-auto w-full max-w-7xl space-y-7 print:max-w-none print:space-y-4 print:p-8">
         <section className="hidden border-b border-slate-200 pb-4 print:block">
           <h1 className="text-2xl font-bold text-slate-900">ModelOpt Result Report</h1>
@@ -362,12 +405,12 @@ export default function ResultsPage() {
         </section>
         <header className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <Link href="/app" className="inline-flex items-center text-sm text-slate-400 hover:text-slate-200 print:hidden">
+            <Link href="/app" className="inline-flex items-center text-sm text-slate-600 hover:text-slate-900 print:hidden">
               <ArrowLeft className="mr-1 size-4" />
               Optimize Again
             </Link>
             <h1 className="mt-3 text-2xl font-bold tracking-tight sm:text-4xl">Your Optimized AI Stack</h1>
-            <p className="mt-2 text-sm text-slate-400">
+            <p className="mt-2 text-sm text-slate-600">
               Generated on {generatedAt || new Date().toLocaleString()}
             </p>
           </div>
@@ -382,7 +425,7 @@ export default function ResultsPage() {
         />
 
         <section>
-          <h2 className="mb-4 text-xl font-semibold text-slate-100">Model Recommendations</h2>
+          <h2 className="mb-4 text-xl font-semibold text-slate-900">Model Recommendations</h2>
           <motion.div
             initial="hidden"
             animate="show"
@@ -407,7 +450,7 @@ export default function ResultsPage() {
                     variant="outline"
                     onClick={() => toggleCompare(card.name)}
                     disabled={!active && selectedCompare.length >= 4}
-                    className="w-full border-slate-700 text-slate-200"
+                    className="w-full border-slate-300 bg-white text-slate-700 hover:bg-slate-50"
                   >
                     <Scale className="mr-2 size-4" />
                     {active ? "Remove from compare" : "Add to compare"}
@@ -419,25 +462,25 @@ export default function ResultsPage() {
         </section>
 
         {selectedModels.length > 0 ? (
-          <section className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/60 p-4 sm:p-6">
+          <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-[0_12px_34px_rgba(15,23,42,0.08)] sm:p-6">
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <h2 className="text-xl font-semibold text-slate-100">Comparison Workspace</h2>
+              <h2 className="text-xl font-semibold text-slate-900">Comparison Workspace</h2>
               <div className="flex w-full flex-wrap gap-2 sm:w-auto">
                 <Button variant="outline" onClick={() => setSelectedCompare([])} className="flex-1 sm:flex-none">
                   Clear Selection
                 </Button>
                 <Link href={`/compare?models=${encodeURIComponent(selectedCompare.join(","))}`} className="flex-1 sm:flex-none">
-                  <Button className="w-full bg-blue-500 text-white hover:bg-blue-400 sm:w-auto">Open Compare Page</Button>
+                  <Button className="w-full bg-blue-600 text-white hover:bg-blue-500 sm:w-auto">Open Compare Page</Button>
                 </Link>
               </div>
             </div>
-            <p className="mt-2 text-sm text-slate-400">Selected {selectedModels.length}/4 models. Your selection is encoded in the URL for sharing.</p>
+            <p className="mt-2 text-sm text-slate-600">Selected {selectedModels.length}/4 models. Your selection is encoded in the URL for sharing.</p>
             <div className="mt-4 grid gap-3 md:grid-cols-2">
               {selectedModels.map((model) => (
-                <article key={model.name} className="min-w-0 rounded-xl border border-slate-700 bg-slate-950/70 p-4">
-                  <h3 className="text-base font-semibold text-slate-100 break-words">{model.display_name}</h3>
-                  <p className="mt-2 text-sm text-slate-300">{model.size} · {model.vram_min_gb}GB VRAM min</p>
-                  <p className="mt-1 text-sm text-slate-400">Context {model.context_window.toLocaleString()} · ~{Math.round(model.est_speed_tps)} tok/s</p>
+                <article key={model.name} className="min-w-0 rounded-xl border border-slate-200 bg-slate-50 p-4">
+                  <h3 className="text-base font-semibold text-slate-900 break-words">{model.display_name}</h3>
+                  <p className="mt-2 text-sm text-slate-700">{model.size} · {model.vram_min_gb}GB VRAM min</p>
+                  <p className="mt-1 text-sm text-slate-600">Context {model.context_window.toLocaleString()} · ~{Math.round(model.est_speed_tps)} tok/s</p>
                   <p className="mt-2 break-words text-xs text-slate-500">{model.use_cases.join(", ")}</p>
                 </article>
               ))}
@@ -454,9 +497,9 @@ export default function ResultsPage() {
           maxSelections={4}
         />
 
-        <section className="sticky bottom-2 rounded-2xl border border-slate-800 bg-slate-900/90 p-4 pb-[max(1rem,env(safe-area-inset-bottom))] backdrop-blur-sm print:hidden">
+        <section className="sticky bottom-2 rounded-2xl border border-slate-200 bg-white/95 p-4 pb-[max(1rem,env(safe-area-inset-bottom))] shadow-[0_14px_30px_rgba(15,23,42,0.12)] backdrop-blur-sm print:hidden">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <p className="text-sm text-slate-400">Actions</p>
+            <p className="text-sm text-slate-600">Actions</p>
             <div className="flex flex-wrap gap-2">
               <Button variant="outline" onClick={startOver}>
                 <RotateCcw className="mr-2 size-4" />
@@ -470,7 +513,7 @@ export default function ResultsPage() {
                 variant="outline"
                 onClick={() => void exportAsPdf()}
                 disabled={isExportingPdf}
-                className="border-blue-400/40 text-blue-200 hover:bg-blue-500/10"
+                className="border-blue-300 text-blue-700 hover:bg-blue-50"
               >
                 <Printer className="mr-2 size-4" />
                 {isExportingPdf ? "Preparing PDF..." : "Export as PDF"}
